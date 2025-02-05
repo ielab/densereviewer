@@ -1,0 +1,56 @@
+# Use an official Python runtime as a base image
+FROM python:3.8.17-slim-buster
+
+# Set the working directory in the container
+WORKDIR /app
+
+# Set environment variables
+RUN addgroup python && adduser --gecos "" --disabled-password --uid=9001 --ingroup=python python
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PYTHONPATH="." \
+    PATH="${PATH}:/home/python/.local/bin"
+
+# Install linux dependencies
+RUN apt-get update \
+    && apt-get install -y \
+        curl \
+        wget \
+        dumb-init \
+        gcc \
+        g++ \
+        libpq-dev \
+        python3-dev \
+        openjdk-11-jdk\
+    && rm -rf /var/lib/apt/lists/* \
+    && chown -R python:python /app
+
+# Install Rust with a specific version (older, compatible with tokenizers 0.10.3)
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain 1.72.1 \
+    && export PATH="$HOME/.cargo/bin:$PATH" \
+    && echo 'export PATH="$HOME/.cargo/bin:$PATH"' >> /etc/environment
+
+# Ensure Rust is available in the PATH
+ENV PATH="/root/.cargo/bin:${PATH}"
+ENV RUSTUP_TOOLCHAIN=1.72.1
+
+# Install Poetry 1.8.3
+RUN curl -sSL https://install.python-poetry.org | POETRY_HOME="/home/python/.local" python3 - --version 1.8.3
+ENV PATH="/home/python/.poetry/bin:${PATH}"
+
+# Install Python dependencies
+COPY --chown=python:python poetry.lock pyproject.toml /app/
+RUN poetry config virtualenvs.create false
+
+# Note: run poetry install without linux group when your machine have no Nvidia GPU
+RUN poetry install --no-interaction --no-ansi --without linux
+
+# Copy entrypoint file and grant privilege
+COPY entrypoint.sh .
+RUN chmod +x /app/entrypoint.sh
+
+# Change user and group owner
+RUN chown python:python /app/
+
+# Default entrypoint
+ENTRYPOINT ["/app/backend/entrypoint.sh"]

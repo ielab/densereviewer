@@ -1,0 +1,12 @@
+.env**
+!.env.example
+logs
+mnt/
+home/
+
+**/user-corpus*
+**.pem
+.vscode
+backend/src/.DS_Store
+backend/.DS_Store
+.DS_Store

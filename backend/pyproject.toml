@@ -1,0 +1,37 @@
+[tool.poetry]
+name = "dense-review"
+version = "0.1.0"
+description = "python libraries for dense-review"
+authors = ["FilmBuachoom <filmbuachoom@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+Django = "4.2.16"
+psycopg2 = "2.9.9"
+djangorestframework = "3.15.2"
+django-environ = "0.11.2"
+gunicorn = "22.0.0"
+celery = "^5.4.0"
+django-cors-headers = "^4.3.1"
+numpy = "1.24.4"
+pandas = "2.0.3"
+nbib = "0.3.2"
+requests = "2.32.3"
+faiss-cpu = "1.7.4"
+pyserini = "0.21.0"
+onnxruntime = "1.19.2"
+websockets = "^12.0"
+redis = "^5.0.1"
+django-redis = "^5.4.0"
+aioredis = "2.0.1"
+
+[tool.poetry.group.linux.dependencies]
+torch = {url = "https://download.pytorch.org/whl/cu121/torch-2.1.0%2Bcu121-cp38-cp38-linux_x86_64.whl"}
+tevatron = "0.1.0"
+accelerate = "^0.26.0"
+datasets = "1.17.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

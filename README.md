@@ -1,32 +1,54 @@
 # DenseReviewer
 
-DenseReviewer is a screening prioritisation tool for medical systematic reviews based on dense retrieval and relevance feedback. It helps medical researchers and librarians efficiently screen titles and abstracts of studies by prioritizing relevant ones using state-of-the-art dense retrieval methods.
+DenseReviewer is a screening prioritization tool for medical systematic reviews based on dense retrieval and relevance feedback. It helps medical researchers and librarians efficiently screen titles and abstracts of studies by prioritizing relevant ones using state-of-the-art dense retrieval methods.
 
 
 ## Features
 
-- **Dense Retrieval & Relevance Feedback**: Uses customised PICO queries and iteratively updates rankings based on screener feedback
+- **Dense Retrieval & Relevance Feedback**: Uses PICO queries and iteratively updates rankings based on screener feedback
 - **Dual Screening Modes**: 
   - Ranking mode: View studies in a paginated ranked list
   - Focus mode: Review studies individually with keyboard controls
 - **Real-time Progress Tracking**: Visual analytics showing review progress and relevance discovery curves
-- **Open Source Python Library**: Enables experimentation with existing datasets and custom dense retrievers
-- **Docker Containerized**: Easy deployment with all components packaged in Docker containers
 
-## Getting Started
+## Installation
 
-### Prerequisites
+Prerequisites: [Docker](https://docs.docker.com/get-started/get-docker/) and [Docker Compose](https://docs.docker.com/compose/) (+ NVIDIA GPU & CUDA optional)
 
-- Docker and Docker Compose
-- (Optional) NVIDIA GPU with CUDA support for accelerated processing
+### 1. Get the Code
 
-### Installation
+```bash
+git clone https://github.com/ielab/densereviewer.git
 
+cd densereviewer
+```
+
+
+### 2. Launch DenseReviewer
+
+****CPU Users****:
+
+```bash
+# build the backend service
+docker compose build backend --no-cache
+
+# start the app
+docker compose up -d
+```
+
+****GPU Users****:
+
+```bash
+# build the backend service with gpu support
+docker compose -f docker-compose-gpu.yml build backend --no-cache
+
+# start the app with gpu support
+docker compose -f docker-compose-gpu.yml down && docker compose -f docker-compose-gpu.yml up -d
+```
 
 ### Using the Python Library
 
-The [Python library](https://github.com/ielab/dense-screening-feedback) from our SIGIR paper supports experimentation with dense retrieval and active learning methods.
-
+The [Python library](https://github.com/ielab/dense-screening-feedback) from our research paper ["Dense Retrieval with Continuous Explicit Feedback for Systematic Review Screening Prioritisation"](https://dl.acm.org/doi/10.1145/3626772.3657921) supports experiments with customized dense retrievers and relevance feedback methods.
 
 ## System Architecture
 
@@ -38,33 +60,14 @@ DenseReviewer consists of six Docker containers:
 5. Service for parsing, encoding, and initial ranking
 6. Service for handling re-ranking
 
-## Citation
-
-If you use DenseReviewer in your research, please cite our paper:
-
-```bibtex
-@inproceedings{mao2024densereviewer,
-  title={Dense Retrieval with Continuous Explicit Feedback for Systematic Review Screening Prioritisation},
-  author={Mao, Xinyu and Zhuang, Shengyao and Koopman, Bevan and Zuccon, Guido},
-  booktitle={Proceedings of the 47th International ACM SIGIR Conference on Research and Development in Information Retrieval},
-  pages={2357--2362},
-  year={2024}
-}
-```
-
-
 ## License
 
 This project is licensed under the GNU Affero General Public License v3.0 (AGPL-3.0) with additional clauses - see the [LICENSE](LICENSE) file for details.
 
 ## Acknowledgments
 
-We extend our gratitude to the engineering team of AI DETA Technologies Co. for their consultation and support in developing the web application.
+We extend our gratitude to the engineering team of AI DETA Technologies Co. for their consultation and support in developing DenseReviewer.
 
 ## Contact
 
 For questions and feedback, please open an issue on GitHub or contact the authors directly.
-
-## Demo
-
-A live demo of DenseReviewer is available at https://densereviewer.ielab.io

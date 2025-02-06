@@ -13,7 +13,15 @@ DenseReviewer is a screening prioritization tool for medical systematic reviews 
 
 ## Installation
 
-Prerequisites: [Docker](https://docs.docker.com/get-started/get-docker/) and [Docker Compose](https://docs.docker.com/compose/) (+ NVIDIA GPU & CUDA optional)
+#### Prerequisites:
+ [Docker](https://docs.docker.com/get-started/get-docker/) and [Docker Compose](https://docs.docker.com/compose/) (+ NVIDIA GPU & CUDA optional)
+#### Compatibility Checklist:
+
+- [x] **Linux (x86_64)** – Tested ✅
+
+- [x] **Windows (x86_64)** – Tested ✅
+
+- [ ] **macOS (Apple Silicon)** – Under Testing 🚧
 
 ### 1. Get the Code
 

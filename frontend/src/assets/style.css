@@ -147,11 +147,11 @@ code {
   border-width: 0.12rem !important;
 }
 
-.scrollpanel-border {
+/* .scrollpanel-border {
   border-right: solid;
   border-width: 0.6rem;
   @apply tw-border-primary-100 tw-pr-4;
-}
+} */
 
 .prevdoc-button {
   @apply tw-absolute tw-left-1/2 tw-translate-x-[-50%] tw-translate-y-[-1vh] tw-cursor-pointer;
@@ -184,4 +184,12 @@ p {
 
 .icon-container {
   @apply tw-bg-primary-100 tw-w-10 tw-h-10 tw-rounded-md tw-flex tw-items-center tw-justify-center;
+}
+
+.p-togglebutton.p-button.p-highlight {
+  @apply tw-bg-white tw-text-primary-500
+}
+
+.p-button-icon.p-button-icon-left.pi.pi-angle-down {
+  @apply tw-text-primary-500
 }

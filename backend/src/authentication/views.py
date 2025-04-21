@@ -142,12 +142,12 @@ class Login(APIView):
             user = authenticate(
                 request, username=account_user_obj.get_username(), password=password
             )
-            
-            # Loging
-            login(request, user)
 
             if not user:
                 raise WrongCredential("Wrong credential")
+            
+            # Loging
+            login(request, user)
 
             # Create token for user
             token_obj = Token.objects.get_or_create(user=user)[0]

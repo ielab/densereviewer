@@ -1,5 +1,5 @@
 <template>
-  <div class="tw-flex tw-gap-6 tw-px-4">
+  <div class="tw-flex tw-gap-6 tw-px-4 tw-min-h-[94vh]">
     <!-- Progress Review Side Bar -->
     <div
       v-if="showProgressReviewSideBar"
@@ -8,7 +8,7 @@
       <CustomButton
         size="small"
         :disabled="selectedCard == null ? true : false"
-        @click="updateFullView(true)"
+        @click="enterFocusMode(true)"
         class="tw-w-full"
         icon="pi pi-window-maximize"
         label="Full View Mode"
@@ -21,12 +21,14 @@
       <ScreeningTrendLineChart
         :data="progressReview.relevance_discovery_curve"
       />
-      <div class="tw-absolute tw-right-[-0.75rem] tw-top-1/2">
+      <div
+        class="tw-absolute tw-right-[-0.75rem] tw-top-1/2"
+        @click="setShowProgressReviewSideBar()"
+      >
         <CustomIconButton
           icon="fa-solid fa-chevron-right"
           rounded
           size="small"
-          class=""
         />
       </div>
     </div>
@@ -48,8 +50,14 @@
       :class="showProgressReviewSideBar ? 'tw-w-[74vw]' : 'tw-w-full'"
       class="tw-flex tw-flex-col tw-gap-4"
     >
-      <LoadingScreen />
+      <div
+        class="tw-text-primary-500 tw-gap-2 tw-w-full tw-h-full tw-flex tw-flex-col tw-justify-center tw-items-center tw-min-h-[86vh]"
+      >
+        <i class="pi pi-spin pi-spinner tw-mx-auto tw-text-[5rem]" />
+        <p>Loading...</p>
+      </div>
     </div>
+
     <div
       v-else
       :class="showProgressReviewSideBar ? 'tw-w-[74vw]' : 'tw-w-full'"
@@ -112,7 +120,7 @@
             :total-number-to-review="
               progressReview.current_page_review.total_number_to_review
             "
-            @update:full-view="updateFullView"
+            @update:full-view="enterFocusMode"
             @update:selected-card="updateSelectedCard"
             @update:feedback="updateFeedback"
           />
@@ -124,10 +132,24 @@
             :current-page-index="currentPageIndex"
             :total-page-index="review.total_number_of_pages"
             :current-page-review-data="progressReview.current_page_review"
-            @update:full-view="updateFullView"
+            @update:full-view="enterFocusMode"
             @update:selected-card="updateSelectedCard"
             @update:feedback="updateFeedback"
             @update:page="updatePage"
+            @pause="
+              router.push({
+                name: 'progress',
+                params: { id: route.params.id },
+                query: { index: currentPageIndex },
+              })
+            "
+            @stop="
+              router.push({
+                name: 'summary',
+                params: { id: route.params.id },
+                query: { index: currentPageIndex },
+              })
+            "
             @scroll-to-bottom="scrollToBottom"
           />
         </div>
@@ -278,53 +300,42 @@
     </template>
   </Modal>
 
-  <div
-    v-if="unjudgeIndices.length > 0"
-    class="tw-w-full tw-flex tw-justify-center tw-pointer-events-none tw-flex tw-items-end tw-fixed tw-h-[100vh] tw-z-[100] tw-py-3 tw-top-0 tw-left-1/2 tw-translate-x-[-50%]"
+  <Message
+    v-for="msg of messages"
+    :key="msg.id"
+    :severity="msg.severity"
+    :pt="{
+      root: 'tw-fixed tw-bottom-6 tw-bg-[#FEFCE9] tw-left-1/2 tw-translate-x-[-50%] tw-min-w-[62vw]',
+    }"
   >
-    <div class="tw-bg-white tw-rounded-md tw-pointer-events-auto tw-shadow">
-      <Message
-        severity="warn"
-        :pt="{
-          wrapper: 'tw-flex tw-items-start',
-          closeButton: 'tw-translate-y-[-10%] tw-ml-6',
-        }"
-      >
-        <template #container>
-          <div class="tw-flex tw-flex-col tw-gap-2 tw-p-4">
-            <div class="tw-flex tw-justify-between tw-items-center">
-              <div class="tw-flex tw-items-center tw-gap-2">
-                <i class="pi pi-exclamation-triangle" />
-                <p>
-                  The studies listed below require review. Please review these
-                  before proceeding to the next batch.
-                </p>
-              </div>
-              <i class="pi pi-times tw-cursor-pointer tw-ml-8" @click="unjudgeIndices = []" />
-            </div>
-            <div class="tw-flex tw-justify-center tw-gap-4">
-              <div v-for="item in unjudgeIndices">
-                <Badge
-                  :severity="
-                    review.screening_pannel[item.index].feedback === 'unjudge'
-                      ? 'warning'
-                      : ''
-                  "
-                  :value="item.index + 1"
-                  class="tw-cursor-pointer tw-w-[1.6rem] tw-h-[1.6rem] tw-flex tw-text-center tw-justify-center tw-items-center tw-rounded-full"
-                  :class="{ 'tw-animate-bounce': selectedCard === item.index }"
-                  @click="
-                    selectedCard = item.index;
-                    scrollToSelectedCard(item.index);
-                  "
-                />
-              </div>
-            </div>
-          </div>
-        </template>
-      </Message>
+    <div class="tw-flex tw-flex-col tw-gap-2 tw-px-2">
+      <p>
+        The following studies still require assessment. Please review them
+        before continuing to the next page.
+      </p>
+      <p>You can navigate to each study by clicking its number.</p>
+      <div class="tw-flex tw-justify-center tw-gap-4">
+        <div v-for="item in unjudgeIndices">
+          <Badge
+            :severity="
+              review.screening_pannel[item.index].feedback === 'unjudge'
+                ? 'warning'
+                : ''
+            "
+            :value="
+              progressReview.current_page_review.total_number_to_review *
+                currentPageIndex +
+              item.index +
+              1
+            "
+            class="tw-cursor-pointer tw-w-[1.6rem] tw-h-[1.6rem] tw-flex tw-text-center tw-justify-center tw-items-center tw-rounded-full"
+            :class="{ 'tw-animate-bounce': selectedCard === item.index }"
+            @click="selectCard(item.index)"
+          />
+        </div>
+      </div>
     </div>
-  </div>
+  </Message>
 </template>
 
 <script lang="ts" setup>
@@ -340,7 +351,6 @@ import ScreeningCard from './components/ScreeningCard.vue'
 import ScreeningTrendLineChart from './components/ScreeningTrendLineChart.vue'
 import Paginator from './components/Paginator.vue'
 import ScreeningFullView from './components/ScreeningFullView.vue'
-import LoadingScreen from '@/components/LoadingScreen.vue'
 import Badge from 'primevue/badge'
 import Message from 'primevue/message'
 
@@ -366,7 +376,8 @@ const route = useRoute()
 const router = useRouter()
 
 import { useScroll } from '@/composables/scroll'
-const { scrollToTop, scrollToSelectedCard, scrollToBottom } = useScroll()
+// const { scrollToTop, scrollToSelectedCard, scrollToBottom } = useScroll()
+const {scrollToSelectedCard, scrollToBottom } = useScroll()
 
 import startIcon from '@/assets/icons/start.png'
 import reviewIcon from '@/assets/icons/review.png'
@@ -463,19 +474,20 @@ const handleArrowUp = () => {
   scrollToSelectedCard(selectedCard.value)
 }
 
-window.addEventListener('keydown', (e) => {
-  // if (fullView.value) return
-  if (e.key === 'ArrowDown') {
-    handleArrowDown()
-    e.preventDefault()
-  } else if (e.key === 'ArrowUp') {
-    handleArrowUp()
-    e.preventDefault()
+window.addEventListener('keyup', (e) => {
+  if (!fullView.value) {
+    if (e.key === 'ArrowDown') {
+      handleArrowDown()
+      e.preventDefault()
+    } else if (e.key === 'ArrowUp') {
+      handleArrowUp()
+      e.preventDefault()
+    }
   }
 })
 
 // update fullView
-const updateFullView = (value: boolean) => {
+const enterFocusMode = (value: boolean) => {
   fullView.value = value
 }
 
@@ -514,19 +526,19 @@ const waitForReRanking = (timeoutMs: number = 30000): Promise<boolean> => {
 }
 
 // update page
-const updatePage = async (data: {
-  type: 'prevClick' | 'nextClick' | 'input' | '>'
-  index: number
-}) => {
+const updatePage = async (index: number) => {
+  if (!fullView.value) {
+    selectedCard.value = null
+  }
+  
   const previousPageIndex = currentPageIndex.value
 
   try {
-    scrollToTop()
     setLoading(true)
 
     // Only perform reranking when moving to next page
-    const isNeedReRanking = data.index > currentPageIndex.value
-    currentPageIndex.value = data.index
+    const isNeedReRanking = index > currentPageIndex.value
+    currentPageIndex.value = index
 
     if (isNeedReRanking) {
       await reRanking()
@@ -561,13 +573,24 @@ const updatePage = async (data: {
   }
 }
 
+// warning unjudge =========================================================
+const messages = ref<
+  { severity: string; content: { index: number }[]; id: number }[]
+>([])
+let count = ref(0)
+
 function scrollToUnjudgeCard() {
   unjudgeIndices.value = review.value.screening_pannel
     .map((item, index) => (item.feedback === 'unjudge' ? { index } : null))
     .filter((entry): entry is { index: number } => entry !== null)
 
-  selectedCard.value = unjudgeIndices.value[0].index
-  scrollToSelectedCard(unjudgeIndices.value[0].index)
+  selectedCard.value = unjudgeIndices.value[0]?.index ?? null
+
+  messages.value = [
+    { severity: 'warn', content: unjudgeIndices.value, id: count.value++ },
+  ]
+
+  scrollToSelectedCard(unjudgeIndices.value[0]?.index)
 }
 
 function setShowProgressAndQuery() {
@@ -587,10 +610,18 @@ function setShowProgressReviewSideBar() {
 }
 
 function initDisplayStatus() {
-  showProgressAndQuery.value =
-    localStorage.getItem('showProgressAndQuery') == '1' ? true : false
-  showProgressReviewSideBar.value =
-    localStorage.getItem('showProgressReviewSideBar') == '1' ? true : false
+  if (
+    localStorage.getItem('showProgressAndQuery') &&
+    localStorage.getItem('showProgressReviewSideBar')
+  ) {
+    showProgressAndQuery.value =
+      localStorage.getItem('showProgressAndQuery') == '1' ? true : false
+    showProgressReviewSideBar.value =
+      localStorage.getItem('showProgressReviewSideBar') == '1' ? true : false
+  } else {
+    setShowProgressAndQuery()
+    setShowProgressReviewSideBar()
+  }
 }
 
 // fetch Data

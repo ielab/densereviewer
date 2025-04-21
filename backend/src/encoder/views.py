@@ -22,8 +22,8 @@ from encoder.serializers import ReviewListSerializer, ReviewSerializer
 from app_utils.tasks        import init_indexing
 from app_utils.re_ranking   import re_ranking, send_message_to_websocket
 
-# Import Max's function
-from app_utils.max.api_routing import parse_corpus, preview_corpus, corpus_converter, parse_query, export_by_judgment
+# Import DenseReviewer's Core functions
+from app_utils.core.api_routing import parse_corpus, preview_corpus, corpus_converter, parse_query, export_by_judgment
 
 # Create your views here.
 class InitialRequestView(APIView):
@@ -249,7 +249,7 @@ class DatasetCreation(APIView):
             # Validated dataset name duplicate
             is_duplicated = Review.objects.filter(name=dataset_name, user=request.user)
             if is_duplicated:
-                raise ValueError(f"The collection name({dataset_name}) is duplicated.")
+                raise ValueError(f"The collection name, {dataset_name}, is duplicated. Please use another name.")
 
             # Get number of queue
             n_queue = get_number_of_queue(queue_name=settings.QUEUE_NAME_1)
@@ -343,6 +343,7 @@ class ReviewList(APIView):
 
             # Serialize the sorted data
             serializer_review = ReviewListSerializer(review_obj, many=True)
+            data = serializer_review.data
 
             # Logging and return
             msg = f"Got dataset list of user({request.user.id})"
@@ -350,7 +351,7 @@ class ReviewList(APIView):
             return JsonResponse(
                 {
                     "message": msg,
-                    "data": serializer_review.data
+                    "data": data
                 },
                 status=status.HTTP_200_OK,
                 safe=False

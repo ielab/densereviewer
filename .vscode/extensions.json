@@ -1,0 +1,17 @@
+{
+  "recommendations": [
+    // Coding style
+    "aaron-bond.better-comments",
+    "gruntfuggly.todo-tree",
+    "dbaeumer.vscode-eslint",
+    "rvest.vs-code-prettier-eslint",
+    "esbenp.prettier-vscode",
+    "ms-python.black-formatter", // Python Formatter
+    // i18n
+    "lokalise.i18n-ally",
+    // Vue.js
+    "vue.volar",
+    // Tailwind CSS
+    "bradlc.vscode-tailwindcss"
+  ]
+}

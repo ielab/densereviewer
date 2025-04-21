@@ -25,9 +25,19 @@ websockets = "^12.0"
 redis = "^5.0.1"
 django-redis = "^5.4.0"
 aioredis = "2.0.1"
+tokenizers = "0.10.3"
+
+[[tool.poetry.source]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+priority = "explicit"
+
+[[tool.poetry.source]]
+name = "pytorch-gpu"
+url = "https://download.pytorch.org/whl/cu121"
+priority = "explicit"
 
 [tool.poetry.group.linux.dependencies]
-torch = {url = "https://download.pytorch.org/whl/cu121/torch-2.1.0%2Bcu121-cp38-cp38-linux_x86_64.whl"}
 tevatron = "0.1.0"
 accelerate = "^0.26.0"
 datasets = "1.17.0"

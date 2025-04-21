@@ -1,67 +1,70 @@
 <template>
-  <div class="card flex justify-content-center">
-    <Dialog
-      v-model:visible="visible"
-      modal
-      :pt="{ root: 'tw-w-[36rem]' }"
-      :breakpoints="{ '1199px': '75vw', '575px': '90vw' }"
-      :close-on-escape="closeOnEscape"
-    >
-      <template #header>
-        <div class="tw-flex tw-gap-3 tw-items-center">
-          <i
-            v-if="icon"
-            :class="[
-              icon,
-              {
-                'tw-text-red-500': iconColor == 'danger',
-                'tw-text-amber-500': iconColor == 'warning',
-                'tw-text-teal-500': iconColor == 'success',
-              },
-            ]"
-            class="tw-text-2xl"
-          />
-          <span
-            v-if="header"
-            class="tw-font-bold"
-            >{{ header }}</span
-          >
-          <slot name="header" />
-        </div>
-      </template>
-      <div class="tw-flex">
-        <span class="tw-flex tw-flex-col">
-          <h2 v-if="title">{{ title }}</h2>
-          <div class="tw-font-bold tw-text-violet-600 tw-text-lg tw-break-all">
-            <slot name="value"></slot>
-          </div>
-          <div class="tw-flex tw-flex-col tw-gap-3 tw-pt-3">
-            <slot name="body"></slot>
-          </div>
-          <div>
-            <slot name="note"></slot>
-          </div>
-        </span>
+  <Dialog
+    v-model:visible="visible"
+    modal
+    :pt="{ root: 'tw-w-[40rem]' }"
+    :breakpoints="{ '1199px': '75vw', '575px': '90vw' }"
+    :close-on-escape="closeOnEscape"
+  >
+    <template #header>
+      <div class="tw-flex tw-gap-3 tw-items-center">
+        <i
+          v-if="icon"
+          :class="[
+            icon,
+            {
+              'tw-text-red-500': iconColor == 'danger',
+              'tw-text-amber-500': iconColor == 'warning',
+              'tw-text-teal-500': iconColor == 'success',
+            },
+          ]"
+          class="tw-text-2xl"
+        />
+        <span
+          v-if="header"
+          class="tw-font-bold"
+          >{{ header }}</span
+        >
+        <slot name="header" />
       </div>
-      <template #footer>
-        <div class="tw-flex tw-justify-end">
+    </template>
+    <div class="tw-flex">
+      <span class="tw-flex tw-flex-col">
+        <h2 v-if="title">{{ title }}</h2>
+        <div class="tw-font-bold tw-text-violet-600 tw-text-lg tw-break-all">
+          <slot name="value"></slot>
+        </div>
+        <div class="tw-flex tw-flex-col tw-gap-3 tw-pt-3">
+          <slot name="body"></slot>
+        </div>
+        <div>
+          <slot name="note"></slot>
+        </div>
+      </span>
+    </div>
+    <template #footer>
+      <div
+        v-focustrap
+        class="tw-flex tw-justify-end"
+      >
+        <slot name="footer">
           <CustomButton
             v-if="leftBtn"
-            type="light"
             :label="leftBtn"
             severity="secondary"
             @click="handleClose"
           />
           <CustomButton
+            autofocus
             v-if="rightBtn"
             :label="rightBtn"
             :severity="severity"
             @click="handleConfirm"
           />
-        </div>
-      </template>
-    </Dialog>
-  </div>
+        </slot>
+      </div>
+    </template>
+  </Dialog>
 </template>
 
 <script lang="ts" setup>
@@ -102,8 +105,10 @@ function handleClose() {
 }
 
 function handleConfirm() {
-  visible.value = false
-  router.push({ name: props.route })
-  emit('confirm', true)
+  setTimeout(() => {
+    visible.value = false
+    router.push({ name: props.route })
+    emit('confirm', true)
+  }, 100)
 }
 </script>

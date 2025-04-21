@@ -4,6 +4,7 @@ from rest_framework import serializers
 
 # Import utilities function
 from encoder.models import Review
+from encoder.utils import *
 
 class ReviewListSerializer(serializers.ModelSerializer):
     # Use fields
@@ -12,6 +13,7 @@ class ReviewListSerializer(serializers.ModelSerializer):
     start_indexing_timestamp    = serializers.DateTimeField(source='job_started_at')
     indexing_time_spent         = serializers.SerializerMethodField()
     current_page_index          = serializers.SerializerMethodField()
+    total_number_of_pages       = serializers.SerializerMethodField()
 
     # Return fields
     class Meta:
@@ -24,7 +26,8 @@ class ReviewListSerializer(serializers.ModelSerializer):
             'start_indexing_timestamp',
             'indexing_time_spent',
             'screening_status',
-            'current_page_index'
+            'current_page_index',
+            'total_number_of_pages'
         ]
 
     def get_indexing_time_spent(self, obj):
@@ -38,6 +41,12 @@ class ReviewListSerializer(serializers.ModelSerializer):
     def get_current_page_index(self, obj):
         return obj.current_screening_page - 1 if obj.current_screening_page else None
     
+    def get_total_number_of_pages(self, obj):
+        total_number_of_pages = get_all_pages(review_obj=obj)
+        if total_number_of_pages is None:
+            return 1
+        else:
+            return int(total_number_of_pages)
 
 # class ReviewSerializer(serializers.Serializer):
 #     # Use fields

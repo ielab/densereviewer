@@ -65,7 +65,11 @@ const chartOptions = computed(() => {
         },
       },
       y: {
+        beginAtZero: true,
+        min: 0,
+        stepSize: 1,
         ticks: {
+          stepSize: 1,
           color: textColorSecondary,
           callback: (value: number) => Math.floor(value).toString(),
         },

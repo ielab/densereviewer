@@ -55,4 +55,5 @@ export interface IPicoQuery {
   I: string[]
   C: string[]
   O: string[]
+  [key: string]: string[] | undefined
 }

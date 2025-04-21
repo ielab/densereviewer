@@ -412,10 +412,13 @@ def get_all_pages(review_obj):
     show_docs_per_page  = review_obj.show_docs_per_page
 
     # Count number to review
-    total_number_to_review = len(ranking_pages[0]["in_page_docs"]) + len(ranking_pages[0]["remaining_ranking"])
+    if ranking_pages:
+        total_number_to_review = len(ranking_pages[0]["in_page_docs"]) + len(ranking_pages[0]["remaining_ranking"])
 
-    # Calculate
-    return math.ceil(total_number_to_review / show_docs_per_page)
+        # Calculate
+        return math.ceil(total_number_to_review / show_docs_per_page)
+    else:
+        return 0
 
 
 def summary_review_progress(data: list):

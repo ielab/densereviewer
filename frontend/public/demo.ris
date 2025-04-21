@@ -1248,8 +1248,8 @@ IS  - 0181-5512 (Linking)
 VI  - 31
 IP  - 3
 DP  - 2008 Mar
-TI  - [Aberrometry and contrast sensitivity after cataract surgery: aspherical IOL 
-      evaluation].
+TI  - Aberrometry and contrast sensitivity after cataract surgery: aspherical IOL 
+      evaluation.
 PG  - 257-62
 AB  - PURPOSE: We report a prospective clinical study investigating efficacy in terms 
       of aberrometry and contrast sensitivity of the aspherical IOL (SW60AT) versus the 
@@ -1323,8 +1323,8 @@ IS  - 1000-4432 (Linking)
 VI  - 23
 IP  - 2
 DP  - 2007 Jun
-TI  - [The observation of visual quality after the implantation of apodized diffractive 
-      multifocal intraocular lens].
+TI  - The observation of visual quality after the implantation of apodized diffractive 
+      multifocal intraocular lens.
 PG  - 79-83
 AB  - OBJECTIVE: To obverse visual acuity, visual symptom and the rate of spectacle 
       independence after implantation of a multifocal intraocular lens (MIOL) in 
@@ -2199,7 +2199,7 @@ IS  - 0023-2165 (Linking)
 VI  - 224
 IP  - 1
 DP  - 2007 Jan
-TI  - [Visual function with blue light filter IOLs].
+TI  - Visual function with blue light filter IOLs.
 PG  - 23-7
 AB  - BACKGROUND: Recently, intraocular lenses (IOLs) with a blue light filter have 
       been introduced to protect the retina from age-related macular degeneration (AMD) 
@@ -2368,62 +2368,6 @@ AID - 10.1016/j.jcrs.2004.11.061 [doi]
 PST - ppublish
 SO  - J Cataract Refract Surg. 2005 Dec;31(12):2319-23. doi: 
       10.1016/j.jcrs.2004.11.061.
-
-PMID- 18195239
-OWN - NLM
-STAT- MEDLINE
-DCOM- 20080205
-LR  - 20150417
-IS  - 0003-9950 (Print)
-IS  - 0003-9950 (Linking)
-VI  - 126
-IP  - 1
-DP  - 2008 Jan
-TI  - Sterile endophthalmitis after benzyl alcohol filtered triamcinolone acetonide 
-      injection.
-PG  - 142-3
-LID - 10.1001/archophthalmol.2007.20 [doi]
-FAU - Lorenzo Carrero, José
-AU  - Lorenzo Carrero J
-FAU - González Barcia, Miguel
-AU  - González Barcia M
-FAU - Pérez Flores, Ines
-AU  - Pérez Flores I
-LA  - eng
-PT  - Case Reports
-PT  - Letter
-PL  - United States
-TA  - Arch Ophthalmol
-JT  - Archives of ophthalmology (Chicago, Ill. : 1960)
-JID - 7706534
-RN  - 0 (Glucocorticoids)
-RN  - F446C597KA (Triamcinolone Acetonide)
-RN  - LKG8494WBH (Benzyl Alcohol)
-SB  - IM
-MH  - Aged
-MH  - Benzyl Alcohol/*adverse effects/chemistry
-MH  - Endophthalmitis/*chemically induced
-MH  - Female
-MH  - Filtration
-MH  - Glucocorticoids/*adverse effects
-MH  - Humans
-MH  - Macular Edema/drug therapy
-MH  - Male
-MH  - Middle Aged
-MH  - Retinal Diseases/drug therapy
-MH  - Retrospective Studies
-MH  - Triamcinolone Acetonide/*adverse effects
-MH  - Vitreous Body
-EDAT- 2008/01/16 09:00
-MHDA- 2008/02/06 09:00
-CRDT- 2008/01/16 09:00
-PHST- 2008/01/16 09:00 [pubmed]
-PHST- 2008/02/06 09:00 [medline]
-PHST- 2008/01/16 09:00 [entrez]
-AID - 126/1/142 [pii]
-AID - 10.1001/archophthalmol.2007.20 [doi]
-PST - ppublish
-SO  - Arch Ophthalmol. 2008 Jan;126(1):142-3. doi: 10.1001/archophthalmol.2007.20.
 
 PMID- 17469752
 OWN - NLM
@@ -3032,9 +2976,9 @@ IS  - 0412-4081 (Linking)
 VI  - 50
 IP  - 11
 DP  - 2014 Nov
-TI  - [The effect of blue light on human retinal pigment epithelium cells α1D subunit 
+TI  - The effect of blue light on human retinal pigment epithelium cells α1D subunit 
       protein expression and vascular endothelial growth factor and basic fibroblast 
-      growth factor secretion in vitro].
+      growth factor secretion in vitro.
 PG  - 814-9
 AB  - OBJECTIVE: To investigate the effect of blue light on human retinal pigment 
       epithelium (RPE) α1D subunit protein expression and its relationship with 
@@ -4790,7 +4734,7 @@ IS  - 0723-8045 (Linking)
 VI  - 88
 IP  - 6
 DP  - 1991
-TI  - [Effect of cut off filters on contrast perception in retinitis pigmentosa].
+TI  - Effect of cut off filters on contrast perception in retinitis pigmentosa.
 PG  - 829-32
 AB  - Cut-off filter glasses can protect retinitis pigmentosa (RP) patients from 
       dangerous short-wave light and UV radiation. Subjective improvements in contrast 
@@ -4929,8 +4873,8 @@ IS  - 1000-4432 (Linking)
 VI  - 23
 IP  - 1
 DP  - 2007 Mar
-TI  - [The clinical investigation of early visual function in cataract patients after 
-      implantation with aspheric intraocular lens].
+TI  - The clinical investigation of early visual function in cataract patients after 
+      implantation with aspheric intraocular lens.
 PG  - 43-7
 AB  - PURPOSE: To initially evaluate the early visual function after implantation with 
       aspheric intraocular lens METHODS: Eighty-eight subjects (91 eyes) were divided 
@@ -5597,8 +5541,8 @@ IS  - 0001-5334 (Linking)
 VI  - 36
 IP  - 5
 DP  - 2003 Oct
-TI  - [Study of blue light induced DNA damage of retinal pigment epithelium(RPE) cells 
-      and the protection of vitamin C].
+TI  - Study of blue light induced DNA damage of retinal pigment epithelium(RPE) cells 
+      and the protection of vitamin C.
 PG  - 397-400
 AB  - To evaluate protection of vitamin C on blue light-induced DNA damage of human 
       retinal pigment epithelium (RPE) cells. The cultured RPE cells were divided into 
@@ -6219,7 +6163,7 @@ IS  - 0941-293X (Linking)
 VI  - 105
 IP  - 1
 DP  - 2008 Jan
-TI  - [Lutein and antioxidants in the prevention of age-related macular degeneration].
+TI  - Lutein and antioxidants in the prevention of age-related macular degeneration.
 PG  - 37-8, 40-5
 AB  - Demographic developments in Europe and North America are causing an increase of 
       age-related diseases. Age-related macular degeneration (AMD) is one of the 
@@ -6899,8 +6843,8 @@ IS  - 1672-173X (Linking)
 VI  - 36
 IP  - 1
 DP  - 2005 Jan
-TI  - [The effect of blue light on mitochondrial membrane potential and cytochrome C of 
-      cultured human retinal pigment epithelium cells].
+TI  - The effect of blue light on mitochondrial membrane potential and cytochrome C of 
+      cultured human retinal pigment epithelium cells.
 PG  - 57-9, 96
 AB  - OBJECTIVE: To answer the question whether mitochondrial permeability transition 
       (MPT) participates in blue light-induced damage to human retinal pigment 
@@ -7064,8 +7008,8 @@ IS  - 0412-4081 (Linking)
 VI  - 49
 IP  - 5
 DP  - 2013 May
-TI  - [The protective effect of photochromic intraocular lens on visible light-induced 
-      lesion in cultured retinal pigment epithelium].
+TI  - The protective effect of photochromic intraocular lens on visible light-induced 
+      lesion in cultured retinal pigment epithelium.
 PG  - 410-5
 AB  - OBJECTIVE: To evaluate the protective effect of photochromic intraocular lens 
       (IOL) on visible light-induced lesion in cultured retinal pigment epithelium 
@@ -9808,8 +9752,8 @@ IS  - 0412-4081 (Linking)
 VI  - 45
 IP  - 3
 DP  - 2009 Mar
-TI  - [Comparison of contrast sensitivity and wavefront analysis after implantation of 
-      AcrySof IQ aspherical intraocular lens].
+TI  - Comparison of contrast sensitivity and wavefront analysis after implantation of 
+      AcrySof IQ aspherical intraocular lens.
 PG  - 239-42
 AB  - OBJECTIVE: To determine vision quality when testing two acrylic intraocular 
       lenses, AcrySof IQ and AcrySof Natural, after routine cataract extraction and IOL 
@@ -12054,8 +11998,8 @@ IS  - 0941-293X (Linking)
 VI  - 102
 IP  - 7
 DP  - 2005 Jul
-TI  - [Influence of cutoff filters on reading behavior in age-related macular 
-      degeneration].
+TI  - Influence of cutoff filters on reading behavior in age-related macular 
+      degeneration.
 PG  - 692-7
 AB  - BACKGROUND: Cutoff filters may improve contrast sensitivity in different retinal 
       dystrophies and therefore lead to improved visual function. We investigated 
@@ -12841,7 +12785,7 @@ IS  - 0365-6691 (Linking)
 VI  - 80
 IP  - 4
 DP  - 2005 Apr
-TI  - [Intraocular lenses with blue light filter].
+TI  - Intraocular lenses with blue light filter.
 PG  - 245-49
 AB  - PURPOSE: To evaluate if a SN60AT <<Natural>> IOL (Alcon) with IMPRUV filter 
       (Alcon) offers any advantage in patients having cataract surgery, as compared 
@@ -13245,8 +13189,8 @@ IS  - 0023-2157 (Linking)
 VI  - 114
 IP  - 4
 DP  - 2012
-TI  - [Evaluation of colour vision according to type of implanted artificial foldable 
-      intraocular lens].
+TI  - Evaluation of colour vision according to type of implanted artificial foldable 
+      intraocular lens.
 PG  - 266-9
 AB  - PURPOSE: The aim of research was comparing the colour vision of patients with 
       blue light filtering artificial lens to the patients with implant without blue 
@@ -14277,9 +14221,9 @@ IS  - 0412-4081 (Linking)
 VI  - 51
 IP  - 11
 DP  - 2015 Nov
-TI  - [The correlation between the concentrations of VEGF and PEDF and Ca2+-PKC 
+TI  - The correlation between the concentrations of VEGF and PEDF and Ca2+-PKC 
       signaling pathways in human retinal pigment epithelial cells cultured in vitro 
-      after exposuring to blue light].
+      after exposuring to blue light.
 PG  - 839-43
 AB  - OBJECTIVE: To investigate the concentrations of vascular endothelial growth 
       factor (VEGF), pigment epithelium-derived factor (PEDF), inositol triphosphate 
@@ -14473,9 +14417,9 @@ IS  - 0412-4081 (Linking)
 VI  - 45
 IP  - 5
 DP  - 2009 May
-TI  - [The clinical investigation of dynamic changes of corneal astigmatism and visual 
+TI  - The clinical investigation of dynamic changes of corneal astigmatism and visual 
       quality for patients after phacoemulsification surgery through different incision 
-      and implantation of different designed intraocular lens].
+      and implantation of different designed intraocular lens.
 PG  - 424-9
 AB  - OBJECTIVE: To compare the corneal astigmatism and wavefront aberration 
       differences of patients with cataract coexisting corneal astigmatism after 
@@ -14980,8 +14924,8 @@ IS  - 0412-4081 (Linking)
 VI  - 47
 IP  - 10
 DP  - 2011 Oct
-TI  - [Clinical observation of visual quality after implantation of toric intraocular 
-      lens].
+TI  - Clinical observation of visual quality after implantation of toric intraocular 
+      lens.
 PG  - 908-12
 AB  - OBJECTIVE: To observe the visual quality after implantation of Acrysof toric 
       intraocular lens (IOL) in cataract patients. METHODS: Eighty eyes (60 patients) 

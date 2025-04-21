@@ -26,6 +26,16 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/* \
     && chown -R python:python /app
 
+# Add an argument to determine the host OS
+ARG HOST_OS
+
+# Install Rust 1.72.1 only if the host OS is macOS
+RUN if [ "$HOST_OS" = "macos" ]; then \
+        curl -fsSL https://raw.githubusercontent.com/kawakami-o3/rush/master/scripts/install.sh | sh; \
+    fi
+ENV PATH="/root/.cargo/bin:${PATH}"
+ENV RUSTUP_TOOLCHAIN=1.72.1
+
 # Install Poetry 1.8.3
 RUN curl -sSL https://install.python-poetry.org | POETRY_HOME="/home/python/.local" python3 - --version 1.8.3
 ENV PATH="/home/python/.poetry/bin:${PATH}"
@@ -33,6 +43,11 @@ ENV PATH="/home/python/.poetry/bin:${PATH}"
 # Install Python dependencies
 COPY --chown=python:python poetry.lock pyproject.toml /app/
 RUN poetry config virtualenvs.create false
+
+# Install dependencies, including PyTorch from the specific index
+RUN poetry add --lock torch=="2.1.0+cu121" --source pytorch-gpu
+
+# Note: run poetry install
 RUN poetry install --no-interaction --no-ansi
 
 # Copy entrypoint file and grant privilege

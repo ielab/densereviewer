@@ -12,9 +12,9 @@ sleep 2;
 echo "Starting Gunicorn server...";
 gunicorn dense_review.wsgi:application --bind=0.0.0.0:8000 &
 
-# Wait until Gunicorn is ready
+# Wait until Gunicorn is ready (http://13.55.69.197:8001)
 echo "Waiting for Gunicorn to start...";
-while ! curl --silent 'http://13.55.69.197:8001/' > /dev/null; do
+while ! curl --silent 'http://localhost:8000/' > /dev/null; do
   echo "Waiting for server...";
   sleep 2;
 done
@@ -22,7 +22,7 @@ done
 echo "Server is ready. Testing API...";
 
 # Test the API
-curl --location 'http://13.55.69.197:8001/encoder/initial_request'
+curl --location 'http://localhost:8000/encoder/initial_request'
 
 # Keep the container running (important for debugging or manual testing)
 tail -f /dev/null

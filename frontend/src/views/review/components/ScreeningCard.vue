@@ -35,7 +35,7 @@
           </div>
           <i
             @click.stop="
-              updateFullView(true);
+              enterFocusMode(true);
               updatedSelectedCard(index);
             "
             class="pi pi-window-maximize tw-text-slate-500 tw-cursor-pointer tw-transform hover:tw-text-primary-500 active:tw-scale-[0.8] tw-transition tw-duration-150"
@@ -72,7 +72,7 @@
           severity="danger"
           class="tw-w-1/6"
           :style="getActiveStyle('exclude')"
-          @click.stop="review('exclude')"
+          @click.stop="review('exclude', 'click')"
         />
         <CustomButton
           size="small"
@@ -81,7 +81,7 @@
           severity="secondary"
           class="tw-w-1/6"
           :style="getActiveStyle('maybe')"
-          @click.stop="review('maybe')"
+          @click.stop="review('maybe', 'click')"
         />
         <CustomButton
           size="small"
@@ -90,7 +90,7 @@
           severity="success"
           class="tw-w-1/6"
           :style="getActiveStyle('include')"
-          @click.stop="review('include')"
+          @click.stop="review('include', 'click')"
         />
         <div class="tw-text-xs tw-text-gray-400 tw-absolute tw-right-0">
           <div class="tw-flex tw-items-center tw-gap-x-2">
@@ -148,8 +148,11 @@ const feedback = ref<'unjudge' | 'include' | 'exclude' | 'maybe'>(
   localDoc.value.feedback,
 )
 
-function review(value: 'unjudge' | 'include' | 'exclude' | 'maybe') {
-  if (isCompleteReview.value && feedback.value == value) {
+function review(
+  value: 'unjudge' | 'include' | 'exclude' | 'maybe',
+  event: 'click' | 'keydown',
+) {
+  if (isCompleteReview.value && feedback.value == value && event === 'click') {
     feedback.value = 'unjudge'
     isCompleteReview.value = false
   } else {
@@ -160,7 +163,7 @@ function review(value: 'unjudge' | 'include' | 'exclude' | 'maybe') {
   emit('update:feedback', { index: props.index, feedback: feedback.value })
 }
 
-const updateFullView = (value: boolean) => {
+const enterFocusMode = (value: boolean) => {
   fullView.value = value
   emit('update:full-view', fullView.value)
 }
@@ -195,7 +198,7 @@ function getActiveStyle(value: 'unjudge' | 'include' | 'exclude' | 'maybe') {
 window.addEventListener('keydown', (e) => {
   if (e.key === 'Enter' && props.selected) {
     e.preventDefault() // Prevent default action (like form submission)
-    updateFullView(true)
+    enterFocusMode(true)
   }
 })
 

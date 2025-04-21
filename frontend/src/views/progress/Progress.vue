@@ -1,217 +1,230 @@
 <template>
   <LoadingScreen v-if="isLoading" />
-  <Container v-else>
-    <div class="tw-flex tw-flex-col tw-gap-6">
-      <p class="tw-text-2xl tw-font-bold tw-text-center">
-        {{ review.dataset_name }}
-      </p>
-      <div
-        class="tw-flex tw-justify-between tw-items-center tw-gap-4 tw-relative"
-      >
-        <ScreeningProgressPanel
-          :items="items"
-          :active-step="2"
-        />
-        <div
-          class="tw-absolute tw-right-0 tw-gap-4 tw-flex tw-bg-white tw-p-3 tw-top-1"
-        >
-          <CustomIconButton
-            v-tooltip.top="'Resume'"
-            icon="fa-solid fa-eject tw-rotate-90"
-            rounded
-            @click="
-              router.push({ name: 'review', params: { id: route.params.id } })
-            "
-          />
-          <CustomIconButton
-            v-tooltip.top="'Stop'"
-            icon="fa-solid fa-stop"
-            severity="danger"
-            rounded
-            @click="finishScreeningConfirm = true"
-          />
-        </div>
-      </div>
 
-      <QueryPanel :pico-query="review.query_pannel" />
-
-      <div
-        class="tw-flex tw-flex-col tw-gap-6 tw-bg-primary-50 tw-p-8 tw-rounded border"
-      >
-        <p class="tw-text-2xl tw-font-medium tw-text-center">
-          You have paused your screening at page
-          {{ Number(route.query.index) + 1 }}
+  <BlockUI
+    :blocked="isLoading"
+    :pt="{ root: 'tw-z-0' }"
+  >
+    <Container>
+      <div class="tw-flex tw-flex-col tw-gap-6">
+        <p class="tw-text-2xl tw-font-bold tw-text-center">
+          {{ review.dataset_name }}
         </p>
+        <div
+          class="tw-flex tw-justify-between tw-items-center tw-gap-4 tw-relative"
+        >
+          <ScreeningProgressPanel
+            :items="items"
+            :active-step="2"
+          />
+          <div
+            class="tw-absolute tw-right-0 tw-gap-4 tw-flex tw-bg-white tw-p-3 tw-top-1"
+          >
+            <CustomIconButton
+              v-tooltip.top="'Resume'"
+              icon="fa-solid fa-eject tw-rotate-90"
+              rounded
+              @click="
+                router.push({ name: 'review', params: { id: route.params.id } })
+              "
+            />
+            <CustomIconButton
+              v-tooltip.top="'Stop'"
+              icon="fa-solid fa-stop"
+              severity="danger"
+              rounded
+              @click="finishScreeningConfirm = true"
+            />
+          </div>
+        </div>
 
-        <Panel :pt="{ header: 'tw-py-3' }">
-          <template #header>
-            <div class="tw-mx-auto">
-              <h3>Overall</h3>
-            </div>
-          </template>
+        <QueryPanel v-if="!isLoading" :pico-query="review.query_pannel" />
 
-          <div class="tw-flex tw-items-center">
-            <div class="tw-flex tw-flex-col tw-gap-2 tw-w-1/3 tw-items-center">
-              <div class="tw-flex">
-                <div class="tw-w-[11.5rem] tw-mr-2 tw-text-right">
-                  <p>Reviewed:</p>
-                </div>
-                <p
-                  class="tw-font-bold tw-bg-primary-200 tw-w-[2rem] tw-text-center tw-rounded"
-                >
-                  {{ review.dashboard_data.reviewed }}
-                </p>
-              </div>
-              <div class="tw-flex">
-                <div class="tw-w-[11.5rem] tw-mr-2 tw-text-right">
-                  <p>Include:</p>
-                </div>
-                <p
-                  class="tw-font-bold tw-bg-green-200 tw-w-[2rem] tw-text-center tw-rounded"
-                >
-                  {{ review.dashboard_data.include }}
-                </p>
-              </div>
-              <div class="tw-flex">
-                <div class="tw-w-[11.5rem] tw-mr-2 tw-text-right">
-                  <p>Exclude:</p>
-                </div>
-                <p
-                  class="tw-font-bold tw-bg-red-200 tw-w-[2rem] tw-text-center tw-rounded"
-                >
-                  {{ review.dashboard_data.exclude }}
-                </p>
-              </div>
-              <div class="tw-flex">
-                <div class="tw-w-[11.5rem] tw-mr-2 tw-text-right">
-                  <p>Maybe:</p>
-                </div>
-                <p
-                  class="tw-font-bold tw-bg-gray-200 tw-w-[2rem] tw-text-center tw-rounded"
-                >
-                  {{ review.dashboard_data.maybe }}
-                </p>
-              </div>
-            </div>
+        <div
+          class="tw-flex tw-flex-col tw-gap-6 tw-bg-primary-50 tw-p-8 tw-rounded border"
+        >
+          <p class="tw-text-2xl tw-font-medium tw-text-center">
+            You have paused your screening at page
+            {{ Number(route.query.index) + 1 }}
+          </p>
 
-            <div class="tw-w-1/3 tw-flex tw-flex-col tw-items-center">
-              <Chart
-                type="pie"
-                :data="chartData"
-                :options="chartOptions"
-                class="w-full md:w-30rem"
-              />
-            </div>
+          <Panel :pt="{ header: 'tw-py-3' }">
+            <template #header>
+              <div class="tw-mx-auto">
+                <h3>Overall</h3>
+              </div>
+            </template>
 
-            <div class="tw-w-1/3 tw-flex tw-flex-col tw-items-center tw-gap-2">
-              <p>Revisit your past screening</p>
-              <!-- <p class="tw-text-xs tw-text-gray-400">
+            <div class="tw-flex tw-items-center">
+              <div
+                class="tw-flex tw-flex-col tw-gap-2 tw-w-1/3 tw-items-center"
+              >
+                <div class="tw-flex">
+                  <div class="tw-w-[11.5rem] tw-mr-2 tw-text-right">
+                    <p>Reviewed:</p>
+                  </div>
+                  <p
+                    class="tw-font-bold tw-bg-primary-200 tw-w-[2rem] tw-text-center tw-rounded"
+                  >
+                    {{ review.dashboard_data.reviewed }}
+                  </p>
+                </div>
+                <div class="tw-flex">
+                  <div class="tw-w-[11.5rem] tw-mr-2 tw-text-right">
+                    <p>Include:</p>
+                  </div>
+                  <p
+                    class="tw-font-bold tw-bg-green-200 tw-w-[2rem] tw-text-center tw-rounded"
+                  >
+                    {{ review.dashboard_data.include }}
+                  </p>
+                </div>
+                <div class="tw-flex">
+                  <div class="tw-w-[11.5rem] tw-mr-2 tw-text-right">
+                    <p>Exclude:</p>
+                  </div>
+                  <p
+                    class="tw-font-bold tw-bg-red-200 tw-w-[2rem] tw-text-center tw-rounded"
+                  >
+                    {{ review.dashboard_data.exclude }}
+                  </p>
+                </div>
+                <div class="tw-flex">
+                  <div class="tw-w-[11.5rem] tw-mr-2 tw-text-right">
+                    <p>Maybe:</p>
+                  </div>
+                  <p
+                    class="tw-font-bold tw-bg-gray-200 tw-w-[2rem] tw-text-center tw-rounded"
+                  >
+                    {{ review.dashboard_data.maybe }}
+                  </p>
+                </div>
+              </div>
+
+              <div class="tw-w-1/3 tw-flex tw-flex-col tw-items-center">
+                <Chart
+                  type="pie"
+                  :data="chartData"
+                  :options="chartOptions"
+                  class="w-full md:w-30rem"
+                />
+              </div>
+
+              <div
+                class="tw-w-1/3 tw-flex tw-flex-col tw-items-center tw-gap-2"
+              >
+                <!-- <p>Revisit your past screening</p> -->
+                <!-- <p class="tw-text-xs tw-text-gray-400">
                 Note that you cannot modify your review decision.
               </p> -->
-              <CustomButton
-                label="Resume your screening"
-                outlined
-                @click="
-                  router.push({
-                    name: 'review',
-                    params: { id: route.params.id },
-                  })
-                "
-              />
+                <CustomButton
+                  label="Resume your screening"
+                  outlined
+                  @click="
+                    router.push({
+                      name: 'review',
+                      params: { id: route.params.id },
+                    })
+                  "
+                />
+              </div>
             </div>
-          </div>
-        </Panel>
+          </Panel>
 
-        <div class="tw-flex tw-flex-col tw-gap-2">
-          <p class="tw-text-2xl tw-font-bold">A list of studies</p>
-          <div class="tw-justify-between tw-flex">
-            <div class="tw-items-center tw-flex tw-gap-1">
-              <CustomButton
-                icon="pi pi-file-export"
-                label="Export selected"
-                outlined
-                @click="exportReview()"
-              />
-              <span>.nbib</span>
-            </div>
-            <div class="tw-items-center tw-flex tw-gap-2">
-              <CustomButton
-                label="All"
-                :outlined="!filters.all"
-                @click="toggleFilter('all')"
-              />
-              <CustomButton
-                label="Include"
-                :outlined="!filters.include"
-                severity="success"
-                @click="toggleFilter('include')"
-              />
-              <CustomButton
-                label="Maybe"
-                :outlined="!filters.maybe"
-                severity="secondary"
-                @click="toggleFilter('maybe')"
-              />
-              <CustomButton
-                label="Exclude"
-                :outlined="!filters.exclude"
-                severity="danger"
-                @click="toggleFilter('exclude')"
-              />
+          <div class="tw-flex tw-flex-col tw-gap-2">
+            <p class="tw-text-2xl tw-font-bold">A list of studies</p>
+            <div class="tw-justify-between tw-flex">
+              <div class="tw-items-center tw-flex tw-gap-1">
+                <CustomButton
+                  icon="pi pi-file-export"
+                  label="Export selected"
+                  outlined
+                  @click="exportReview()"
+                />
+                <span>.nbib</span>
+              </div>
+              <div class="tw-items-center tw-flex tw-gap-2">
+                <CustomButton
+                  label="All"
+                  :outlined="!filters.all"
+                  @click="toggleFilter('all')"
+                />
+                <CustomButton
+                  label="Include"
+                  :outlined="!filters.include"
+                  severity="success"
+                  @click="toggleFilter('include')"
+                />
+                <CustomButton
+                  label="Maybe"
+                  :outlined="!filters.maybe"
+                  severity="secondary"
+                  @click="toggleFilter('maybe')"
+                />
+                <CustomButton
+                  label="Exclude"
+                  :outlined="!filters.exclude"
+                  severity="danger"
+                  @click="toggleFilter('exclude')"
+                />
+              </div>
             </div>
           </div>
+
+          <DataTable
+            :value="screeningPannel"
+            showGridlines
+            stripedRows
+            paginator
+            :rows="25"
+            :rowsPerPageOptions="[25, 50, 100]"
+          >
+            <Column>
+              <template #header>
+                <p class="tw-m-auto tw-text-center">Order</p>
+              </template>
+              <template #body="slotProps">
+                <p class="tw-text-center">{{ slotProps.index + 1 }}</p>
+              </template>
+            </Column>
+            <Column>
+              <template #header>
+                <p class="tw-m-auto tw-text-center">PMID</p>
+              </template>
+              <template #body="slotProps">
+                <p class="tw-text-center">{{ slotProps.data.pmid }}</p>
+              </template>
+            </Column>
+            <Column>
+              <template #header>
+                <p class="tw-m-auto tw-text-center">Title</p>
+              </template>
+              <template #body="slotProps">
+                {{ slotProps.data.corpus.title }}
+              </template>
+            </Column>
+            <Column>
+              <template #header>
+                <p class="tw-m-auto tw-text-center">Assessment</p>
+              </template>
+              <template #body="slotProps">
+                <p
+                  class="tw-text-center tw-rounded tw-font-medium"
+                  :class="{
+                    'tw-bg-green-200': slotProps.data.feedback === 'include',
+                    'tw-bg-red-200': slotProps.data.feedback === 'exclude',
+                    'tw-bg-gray-200': slotProps.data.feedback === 'maybe',
+                  }"
+                >
+                  {{ toTitleCase(slotProps.data.feedback) }}
+                </p>
+              </template>
+            </Column>
+          </DataTable>
         </div>
-
-        <DataTable
-          :value="screeningPannel"
-          showGridlines
-          stripedRows
-        >
-          <Column>
-            <template #header>
-              <p class="tw-m-auto tw-text-center">Order</p>
-            </template>
-            <template #body="slotProps">
-              <p class="tw-text-center">{{ slotProps.index + 1 }}</p>
-            </template>
-          </Column>
-          <Column>
-            <template #header>
-              <p class="tw-m-auto tw-text-center">PMID</p>
-            </template>
-            <template #body="slotProps">
-              <p class="tw-text-center">{{ slotProps.data.pmid }}</p>
-            </template>
-          </Column>
-          <Column>
-            <template #header>
-              <p class="tw-m-auto tw-text-center">Title</p>
-            </template>
-            <template #body="slotProps">
-              {{ slotProps.data.corpus.title }}
-            </template>
-          </Column>
-          <Column>
-            <template #header>
-              <p class="tw-m-auto tw-text-center">Assessment</p>
-            </template>
-            <template #body="slotProps">
-              <p
-                class="tw-text-center tw-rounded tw-font-medium"
-                :class="{
-                  'tw-bg-green-200': slotProps.data.feedback === 'include',
-                  'tw-bg-red-200': slotProps.data.feedback === 'exclude',
-                  'tw-bg-gray-200': slotProps.data.feedback === 'maybe',
-                }"
-              >
-                {{ toTitleCase(slotProps.data.feedback) }}
-              </p>
-            </template>
-          </Column>
-        </DataTable>
       </div>
-    </div>
-  </Container>
+    </Container>
+  </BlockUI>
 
   <Modal
     id="FinishScreeningConfirmationModal"
@@ -260,6 +273,7 @@ import ScreeningProgressPanel from '../review/components/ScreeningProgressPanel.
 import Panel from 'primevue/panel'
 import Chart from 'primevue/chart'
 import Modal from '@/components/Modal.vue'
+import BlockUI from 'primevue/blockui'
 
 const route = useRoute()
 const router = useRouter()

@@ -9,8 +9,8 @@ from redis.asyncio import Redis
 from django.conf import settings
 from django.utils.timezone import now
 
-# Import Max's function
-from app_utils.max.dense_ranker import InteractiveRanker
+# Import DenseReviewer's Core functions
+from app_utils.core.dense_ranker import InteractiveRanker
 
 # Import utilities function
 from encoder.models import Review

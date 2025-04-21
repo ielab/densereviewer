@@ -1,109 +1,122 @@
 <template>
-  <Container>
-    <div class="tw-flex tw-flex-col tw-gap-6">
-      <div class="tw-flex tw-flex-col tw-gap-2">
-        <div class="tw-flex tw-w-full">
-          <div class="tw-w-2/3 tw-flex tw-flex-col tw-gap-2">
-            <label>
-              Dataset/Review Name <span class="tw-text-red-500">*</span>
-            </label>
-            <InputText
-              fluid
-              class="tw-w-full"
-              :class="[{ 'tw-border-red-500': duplicateError }]"
-              v-model="datasetName"
-            />
-          </div>
-          <div
-            class="tw-w-1/3 tw-flex tw-flex-row tw-gap-2 tw-justify-end tw-items-end"
-          >
-            <CustomButton
-              label="Cancel"
-              severity="secondary"
-              class="tw-w-fit"
-              @click="cancel()"
-            />
-            <CustomButton
-              :label="labelButton"
-              class="tw-w-fit"
-              :loading="isLoading"
-              @click="submit()"
-            />
-          </div>
-        </div>
-        <small
-          v-if="duplicateError"
-          class="tw-text-red-500"
-        >
-          {{ errorMessage }} Please retry with a new name.
-        </small>
-      </div>
+  <LoadingScreen v-if="isLoading" />
 
-      <Divider />
-
-      <Panel header="Corpus Format Requirements">
-        <div class="tw-flex tw-flex-col tw-gap-4">
-          <p>
-            Make sure that your dataset conform to the system requirements and
-            follow the format below:
-          </p>
-
-          <div class="tw-flex tw-flex-col tw-gap-2">
-            <p>
-              - <b>corpus.ris</b>: a text file in ris format from your
-              literature management software such as EndNote, which includes 3
-              fields:
-            </p>
-            <p class="tw-indent-3">
-              pmid : the PubMed unique identifier or unique record identifier of
-              literature in a custom database
-            </p>
-            <p class="tw-indent-3">title : the title of a scholarly article</p>
-            <p class="tw-indent-3">
-              abstract : the abstract of a scholarly article with paragraphs or
-              passages
-            </p>
-          </div>
-
-          <p>
-            If your dataset does not follow the described format, please update
-            your files and re-upload.
-          </p>
-        </div>
-      </Panel>
-
-      <Panel>
-        <template #header>
-          <div class="tw-flex tw-items-center tw-gap-4">
-            <b>Corpus File</b>
+  <BlockUI
+    :blocked="isLoading || emptyCorpus || emptyPicoQuery"
+    :pt="{ root: 'tw-z-0' }"
+  >
+    <Container>
+      <div class="tw-flex tw-flex-col tw-gap-6">
+        <div class="tw-flex tw-flex-col tw-gap-2">
+          <div class="tw-flex tw-w-full">
             <div
-              class="tw-flex tw-text-sm tw-text-[#4b5563] tw-items-center tw-gap-2"
+              v-focustrap
+              class="tw-w-2/3 tw-flex tw-flex-col tw-gap-2"
             >
-              <i class="pi pi-info-circle" />
-              <p>
-                Showing preview of first entry • Total
-                <span class="tw-text-primary-500 tw-font-medium"
-                  >{{ uploadCollectionFilesStore.totalDocuments }}
-                  <span v-if="uploadCollectionFilesStore.totalDocuments === 1"
-                    >study</span
-                  ><span v-else>studies</span></span
-                >
-                in corpus
-              </p>
+              <label>
+                Dataset/Review Name <span class="tw-text-red-500">*</span>
+              </label>
+              <InputText
+                fluid
+                class="tw-w-full"
+                :class="[{ 'tw-border-red-500': duplicateError }]"
+                v-model="datasetName"
+                autofocus
+                @keyup.enter="submit()"
+              />
+            </div>
+            <div
+              class="tw-w-1/3 tw-flex tw-flex-row tw-gap-2 tw-justify-end tw-items-end"
+            >
+              <CustomButton
+                label="Cancel"
+                severity="secondary"
+                class="tw-w-fit"
+                @click="deleteCorpus()"
+              />
+              <CustomButton
+                label="Create Dataset/Review"
+                class="tw-w-fit"
+                @click="submit()"
+              />
             </div>
           </div>
-        </template>
-        <Textarea
-          v-model="corpusFirstEntry"
-          :rows="20"
-          disabled
-          class="tw-w-full"
-        />
-      </Panel>
-      <QueryPanel :pico-query="picoQuery" />
-      <ScrollTop />
-    </div>
-  </Container>
+          <small
+            v-if="duplicateError"
+            class="tw-text-red-500"
+          >
+            {{ errorMessage }} Please retry with a new name.
+          </small>
+        </div>
+
+        <Divider />
+
+        <Panel header="Corpus Format Requirements">
+          <div class="tw-flex tw-flex-col tw-gap-4">
+            <p>
+              Make sure that your dataset conform to the system requirements and
+              follow the format below:
+            </p>
+
+            <div class="tw-flex tw-flex-col tw-gap-2">
+              <p>
+                - <b>corpus.ris</b>: a text file in ris format from your
+                literature management software such as EndNote, which includes 3
+                fields:
+              </p>
+              <p class="tw-indent-3">
+                pmid : the PubMed unique identifier or unique record identifier
+                of literature in a custom database
+              </p>
+              <p class="tw-indent-3">
+                title : the title of a scholarly article
+              </p>
+              <p class="tw-indent-3">
+                abstract : the abstract of a scholarly article with paragraphs
+                or passages
+              </p>
+            </div>
+
+            <p>
+              If your dataset does not follow the described format, please
+              update your files and re-upload.
+            </p>
+          </div>
+        </Panel>
+
+        <Panel>
+          <template #header>
+            <div class="tw-flex tw-items-center tw-gap-4">
+              <b>Corpus File</b>
+              <div
+                class="tw-flex tw-text-sm tw-text-[#4b5563] tw-items-center tw-gap-2"
+              >
+                <i class="pi pi-info-circle" />
+                <p>
+                  Showing preview of first entry • Total
+                  <span class="tw-text-primary-500 tw-font-medium"
+                    >{{ uploadCollectionFilesStore.totalDocuments }}
+                    <span v-if="uploadCollectionFilesStore.totalDocuments === 1"
+                      >study</span
+                    ><span v-else>studies</span></span
+                  >
+                  in corpus
+                </p>
+              </div>
+            </div>
+          </template>
+          <Textarea
+            v-model="corpusFirstEntry"
+            :rows="20"
+            disabled
+            class="tw-w-full"
+          />
+        </Panel>
+        <QueryPanel :pico-query="picoQuery" />
+        <ScrollTop />
+      </div>
+    </Container>
+  </BlockUI>
 
   <Modal
     v-model:isActive="isCreateModalActive"
@@ -132,7 +145,7 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, nextTick } from 'vue'
 
 import Container from '@/components/Container.vue'
 import CustomButton from '@/components/CustomButton.vue'
@@ -142,11 +155,16 @@ import Textarea from 'primevue/textarea'
 import QueryPanel from '../review/components/QueryPanel.vue'
 import ScrollTop from '@/components/ScrollTop.vue'
 import Modal from '@/components/Modal.vue'
+import BlockUI from 'primevue/blockui'
+import LoadingScreen from '@/components/LoadingScreen.vue'
 
 import axios, { AxiosError } from 'axios'
 import { getTokenHeader } from '@/utils/auth.ts'
 
-import { uploadCollectionFilesStore } from '@/stores/uploadCollection'
+import {
+  uploadCollectionFilesStore,
+  clearUploadCollectionFilesStore,
+} from '@/stores/uploadCollection'
 import InputText from 'primevue/inputtext'
 import { IUploadedCorpus, IPicoQuery } from '@/types/corpus.js'
 
@@ -162,17 +180,13 @@ const { getResponseErrorMessage } = useError()
 import { useLoading } from '@/composables/loading'
 const { isLoading, setLoading } = useLoading(false)
 
-import { useDirty } from '@/composables/dirty'
-const { setDirty, clearDirty, isDirty } = useDirty()
-
 const duplicateError = ref(false)
 const errorMessage = ref('')
 
-import { onBeforeRouteLeave, useRouter } from 'vue-router'
+import { useRouter } from 'vue-router'
 const router = useRouter()
 
 const datasetName = ref('')
-const labelButton = ref('Create Dataset/Review')
 
 const corpus = ref<IUploadedCorpus>(uploadCollectionFilesStore.value.corpus)
 const corpusFirstEntry = ref(corpus.value.corpus_first_entry)
@@ -182,12 +196,17 @@ const picoQuery = ref<IPicoQuery>(uploadCollectionFilesStore.value.picoQuery)
 const isCreateModalActive = ref(false)
 const isCreateDatasetSuccess = ref(false)
 
+const emptyCorpus = ref(false)
+const emptyPicoQuery = ref(false)
+
 const submit = async () => {
   try {
     // Validate collection name
     const validation = validateCollection(datasetName.value)
     if (validation.error) throw validation.error
-    isCreateModalActive.value = true
+    setTimeout(() => {
+      isCreateModalActive.value = true
+    }, 100)
   } catch (error) {
     console.error(error)
     if (error instanceof ValidationError) {
@@ -207,7 +226,7 @@ const confirmSubmit = async () => {
   try {
     setLoading(true)
     duplicateError.value = false
-    
+
     const body = {
       corpus_id: corpus.value.id,
       dataset_name: datasetName.value,
@@ -217,6 +236,7 @@ const confirmSubmit = async () => {
     isCreateDatasetSuccess.value = true
     router.push({ name: 'mydataset' })
   } catch (error) {
+    setLoading(false)
     console.error(error)
 
     if (error instanceof Error) {
@@ -226,63 +246,48 @@ const confirmSubmit = async () => {
     if (error instanceof AxiosError) {
       errorMessage.value = getResponseErrorMessage(error).message
 
-      const regex = /^The collection name\((.*?)\) is duplicated\.$/;
+      const regex = /^The collection name\((.*?)\) is duplicated\.$/
       if (regex.test(errorMessage.value)) {
         duplicateError.value = true
       }
     }
 
     showToast('error', 'Failed to create datasets', errorMessage.value)
-  } finally {
-    setLoading(false)
-    clearDirty()
   }
 }
 
 const deleteCorpus = async () => {
   try {
-    labelButton.value = 'Deleting Corpus File...'
     setLoading(true)
     const params = { corpus_id: corpus.value.id }
     await axios.delete('/encoder/upload_corpus', getTokenHeader({ params }))
+    clearUploadCollectionFilesStore()
+    return router.push({ name: 'home' })
   } catch (error) {
+    setLoading(false)
     console.error(error)
     let errorMessage = ''
     console.log(errorMessage)
     if (error instanceof Error) errorMessage = error.message
     if (error instanceof AxiosError)
       errorMessage = getResponseErrorMessage(error).message
-  } finally {
-    setLoading(false)
+    throw error
   }
 }
 
-onMounted(() => {
-  const emptyCorpus = uploadCollectionFilesStore.value.totalDocuments <= 0
-  const emptyPicoQuery = Object.values(picoQuery.value).some(
+onMounted(async () => {
+  emptyCorpus.value = uploadCollectionFilesStore.value.totalDocuments <= 0
+  emptyPicoQuery.value = Object.values(picoQuery.value).every(
     (arr) => Array.isArray(arr) && arr.length === 0,
   )
 
-  if (emptyCorpus || emptyPicoQuery) {
+  if (emptyCorpus.value || emptyPicoQuery.value) {
     alert(
       'Your uploaded corpus file was not found. Please upload the corpus file and pico query first.',
     )
-    return router.push({ name: 'upload' })
-  }
 
-  setDirty()
-})
-
-const cancel = async () => {
-  if (isDirty.value) {
-    await deleteCorpus()
-  }
-  return router.push({ name: 'home' })
-}
-
-onBeforeRouteLeave(async () => {
-  if (isDirty.value) {
-    await deleteCorpus()
+    await nextTick()
+    router.push({ name: 'upload' })
   }
 })
 </script>

@@ -22,10 +22,18 @@ import 'primeicons/primeicons.css'
 
 // PrimeVue Components
 import ToastService from 'primevue/toastservice'
-import Tooltip from 'primevue/tooltip';
-import ConfirmationService from 'primevue/confirmationservice';
+import Tooltip from 'primevue/tooltip'
+import ConfirmationService from 'primevue/confirmationservice'
+import FocusTrap from 'primevue/focustrap'
 
 // Custom CSS
 import './assets/style.css'
 
-createApp(App).use(router).use(PrimeVue).use(ToastService).use(ConfirmationService).directive('tooltip', Tooltip).mount('#app')
+createApp(App)
+  .use(router)
+  .use(PrimeVue)
+  .use(ToastService)
+  .use(ConfirmationService)
+  .directive('tooltip', Tooltip)
+  .directive('focustrap', FocusTrap)
+  .mount('#app')

@@ -21,7 +21,7 @@ DenseReviewer is a screening prioritization tool for medical systematic reviews 
 
 - [x] **Windows (x86_64)** – Tested ✅
 
-- [ ] **macOS (Apple Silicon)** – Under Testing 🚧
+- [ ] **macOS (Apple Silicon)** – Tested ✅
 
 ### 1. Get the Code
 
@@ -38,7 +38,7 @@ cd densereviewer
 
 ```bash
 # build the backend service
-docker compose build backend --no-cache
+docker-compose build backend --no-cache --build-arg BUILD_OS=$(uname -s)
 
 # start the app
 docker compose up -d
@@ -53,6 +53,15 @@ docker compose -f docker-compose-gpu.yml build backend --no-cache
 # start the app with gpu support
 docker compose -f docker-compose-gpu.yml down && docker compose -f docker-compose-gpu.yml up -d
 ```
+
+### 3. Access the User Interface
+
+Once the application is running, you can access the DenseReviewer web interface by opening your browser and navigating to:
+
+```
+http://localhost
+```
+
 
 ### Using the Python Library
 

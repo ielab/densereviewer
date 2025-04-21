@@ -1,9 +1,9 @@
 <template>
-  <div class="tw-w-[24%] tw-fixed tw-flex tw-flex-col tw-gap-y-2 tw-py-4">
+  <div class="tw-w-full tw-flex tw-flex-col tw-gap-4">
     <!-- Control Keys -->
     <Panel
       header="Control Keys"
-      :pt="{ header: 'tw-py-2', content: 'tw-px-2 tw-py-3' }"
+      :pt="{ header: 'tw-p-2', content: 'tw-p-2' }"
       class="tw-w-full"
     >
       <div class="tw-flex tw-justify-around">
@@ -30,10 +30,10 @@
     <!-- Assessment Keys -->
     <Panel
       header="Assessment Keys"
-      :pt="{ header: 'tw-py-2', content: 'tw-px-2 tw-py-3' }"
+      :pt="{ header: 'tw-p-2', content: 'tw-p-2' }"
       class="tw-w-full"
     >
-      <div class="tw-flex tw-justify-around">
+      <div class="tw-grid tw-grid-cols-4">
         <KeyBoardTips
           color="red"
           icon="fa-solid fa-arrow-left"
@@ -51,13 +51,19 @@
           label="Right"
           for="Include"
         />
+        <KeyBoardTips
+          color="yellow"
+          icon="pi pi-delete-left"
+          label="Bksp"
+          for="Deselect"
+        />
       </div>
     </Panel>
 
     <!-- Composite Keys -->
     <Panel
       header="Composite Keys"
-      :pt="{ header: 'tw-py-2', content: 'tw-px-2 tw-py-3' }"
+      :pt="{ header: 'tw-p-2', content: 'tw-p-2' }"
       class="tw-w-full"
     >
       <div class="tw-flex tw-flex-col tw-gap-2">
@@ -177,4 +183,5 @@
 import Panel from 'primevue/panel'
 import Divider from 'primevue/divider'
 import KeyBoardTips from './KeyBoardTips.vue'
+// import InlineMessage from 'primevue/inlinemessage'
 </script>

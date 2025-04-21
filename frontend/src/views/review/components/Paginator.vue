@@ -6,6 +6,7 @@
       icon="fa-solid fa-chevron-left"
       :disabled="page === 1 || isLoading"
       @click="updatePage('prevClick')"
+      :pt="{root:'tw-h-8 tw-w-8'}"
     />
     <InputNumber
       v-model:modelValue="page"
@@ -16,7 +17,11 @@
     />
     <CustomIconButton
       rounded
-      text
+      :text="
+        areAllFeedbacksJudged && currentPageIndex != totalPageIndex - 1
+          ? false
+          : true
+      "
       icon="fa-solid fa-chevron-right"
       :disabled="page === totalPageIndex || isLoading"
       @click="updatePage('nextClick')"
@@ -25,6 +30,7 @@
           ? 'tw-animate-ping'
           : undefined
       "
+      :pt="{root:'tw-h-8 tw-w-8'}"
     />
   </div>
 </template>
@@ -71,7 +77,7 @@ function updatePage(type: 'input' | 'nextClick' | 'prevClick') {
 
   if (type === 'prevClick' && page.value - 1 > 0) {
     page.value -= 1
-    emit('update:page', { type, index: page.value - 1 })
+    emit('update:page', page.value - 1)
     return
   }
 
@@ -103,7 +109,7 @@ function updatePage(type: 'input' | 'nextClick' | 'prevClick') {
   //   lastAccessiblePage.value = page.value
   // }
 
-  emit('update:page', { type, index: page.value - 1 })
+  emit('update:page', page.value - 1)
   return
 }
 

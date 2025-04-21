@@ -9,7 +9,7 @@ x-celery-common:
       - ./backend/:/app/backend/
       - ./logs/:/app/backend/src/logs
       - ./user-corpus:/app/backend/src/user-corpus
-      - /home/ubuntu/max:/app/backend/src/app_utils/max
+      - ./backend/src/app_utils/core:/app/backend/src/app_utils/max
   env_file:
     - ./backend/src/.env
   depends_on:
@@ -54,7 +54,7 @@ services:
       - ./backend/:/app/backend/
       - ./logs/:/app/backend/src/logs
       - ./user-corpus:/app/backend/src/user-corpus
-      - /home/ubuntu/max:/app/backend/src/app_utils/max
+      - ./backend/src/app_utils/core:/app/backend/src/app_utils/max
     env_file:
       - ./backend/src/.env
     depends_on:

@@ -2,139 +2,151 @@
   <Dialog
     v-model:visible="visible"
     modal
-    :pt="{ root: 'tw-w-[95%]' }"
+    :pt="{ root: 'tw-w-[95vw] tw-h-[100vh]' }"
   >
     <template #container>
       <div
-        class="tw-rounded-t-lg tw-flex tw-min-h-[81.5vh] tw-overflow-y-auto"
+        class="tw-rounded-t-lg tw-flex tw-overflow-y-auto tw-h-full tw-gap-4 tw-px-4"
         :class="isCompleteReview ? 'tw-bg-purple-50' : 'tw-bg-white'"
       >
         <!-- previous article button -->
         <div
-          class="tw-absolute tw-top-0 tw-translate-y-[-3.5vh] tw-left-1/2 tw-translate-x-[-50%] tw-transform active:tw-scale-[0.8] tw-transition tw-duration-150"
+          class="tw-absolute tw-top-0 tw-translate-y-[-3.5vh] tw-left-1/2 tw-translate-x-[-50%]"
           @click="prevDoc()"
         >
-          <i class="fa-solid fa-chevron-up tw-cursor-pointer tw-text-white" />
+          <i
+            class="fa-solid fa-chevron-up tw-cursor-pointer tw-text-white active:tw-scale-[0.8] tw-transition tw-duration-150 hover:tw-text-primary-500"
+          />
         </div>
 
         <!-- next article button -->
         <div
-          class="tw-absolute tw-bottom-0 tw-translate-y-[3.5vh] tw-left-1/2 tw-translate-x-[-50%] tw-transform active:tw-scale-[0.8] tw-transition tw-duration-150"
+          class="tw-absolute tw-bottom-0 tw-translate-y-[3.5vh] tw-left-1/2 tw-translate-x-[-50%]"
           @click="nextDoc()"
         >
-          <i class="fa-solid fa-chevron-down tw-text-white tw-cursor-pointer" />
+          <i
+            class="fa-solid fa-chevron-down tw-text-white tw-cursor-pointer active:tw-scale-[0.8] tw-transition tw-duration-150 hover:tw-text-primary-500"
+          />
         </div>
 
         <!-- title, authors, pmid, ranking section -->
-        <div class="tw-w-1/4">
-          <div
-            class="tw-w-1/4 tw-pl-6 tw-py-6 tw-fixed tw-h-[calc(100%-3.8rem)]"
-          >
-            <div class="tw-flex tw-flex-col tw-justify-between tw-h-full">
-              <div>
-                <p class="tw-text-2xl tw-font-bold">
-                  {{ localDocs[currentIndex].corpus.title }}
-                </p>
-                <div class="tw-flex tw-flex-wrap tw-gap-x-2 tw-my-2">
+        <div class="tw-w-[26vw] tw-py-4">
+          <div class="tw-flex tw-flex-col tw-justify-between tw-h-full">
+            <div class="tw-flex tw-flex-col tw-gap-2">
+              <p
+                class="tw-font-medium tw-text-center tw-text-primary-500 tw-bg-primary-100"
+              >
+                Rank: #{{
+                  currentPageReviewData.total_number_to_review *
+                    currentPageIndex +
+                  localDocs[currentIndex].rank
+                }}
+              </p>
+              <p class="tw-text-2xl tw-font-bold">
+                {{ localDocs[currentIndex].corpus.title }}
+              </p>
+              <div class="tw-flex tw-flex-wrap tw-gap-x-2">
+                <span
+                  class="tw-text-primary-500 tw-font-medium"
+                  v-for="(au, index) in localDocs[currentIndex].corpus.authors"
+                  :key="index"
+                >
+                  {{ au.author_abbreviated }}
                   <span
-                    class="tw-text-primary-500 tw-font-medium"
-                    v-for="(au, index) in localDocs[currentIndex].corpus
-                      .authors"
-                    :key="index"
+                    v-if="
+                      index !==
+                      localDocs[currentIndex].corpus.authors.length - 1
+                    "
                   >
-                    {{ au.author_abbreviated }}
-                    <span
-                      v-if="
-                        index !==
-                        localDocs[currentIndex].corpus.authors.length - 1
-                      "
-                    >
-                      ;
-                    </span>
+                    ;
                   </span>
-                </div>
-                <p class="tw-text-slate-500">
-                  pmid: {{ localDocs[currentIndex].pmid }}
-                </p>
+                </span>
               </div>
+              <p class="tw-text-slate-500">
+                pmid: {{ localDocs[currentIndex].pmid }}
+              </p>
+            </div>
 
-              <div class="tw-flex tw-flex-col tw-gap-2 tw-text-sm">
-                <p class="tw-text-primary-500 tw-font-medium tw-text-right">
-                  {{ currentPageReviewData.reviewed }} /
-                  {{ currentPageReviewData.total_number_to_review }} Reviewed
-                </p>
-                <ProgressBar
-                  :showValue="false"
-                  style="height: 6px"
-                  :value="
-                    (currentPageReviewData.reviewed /
-                      currentPageReviewData.total_number_to_review) *
-                    100
-                  "
+            <div class="tw-flex tw-flex-col tw-gap-2 tw-text-sm">
+              <p class="tw-text-primary-500 tw-font-medium tw-text-right">
+                {{ currentPageReviewData.reviewed }} /
+                {{ currentPageReviewData.total_number_to_review }} Reviewed
+              </p>
+              <ProgressBar
+                :showValue="false"
+                style="height: 6px"
+                :value="
+                  (currentPageReviewData.reviewed /
+                    currentPageReviewData.total_number_to_review) *
+                  100
+                "
+              />
+              <div class="tw-flex tw-items-center tw-gap-2">
+                <i
+                  class="fa-solid fa-circle fa-xs tw-text-green-500 border-bold tw-border-green-500 tw-rounded-full"
                 />
-                <div class="tw-flex tw-items-center tw-gap-2">
-                  <i
-                    class="fa-solid fa-circle fa-xs tw-text-green-500 border-bold tw-border-green-500 tw-rounded-full"
-                  />
-                  <p>Include ({{ currentPageReviewData.include }})</p>
-                </div>
-                <div class="tw-flex tw-items-center tw-gap-2">
-                  <i
-                    class="fa-solid fa-circle fa-xs tw-text-gray-500 border-bold tw-border-gray-500 tw-rounded-full"
-                  />
-                  <p>Maybe ({{ currentPageReviewData.maybe }})</p>
-                </div>
-                <div class="tw-flex tw-items-center tw-gap-2">
-                  <i
-                    class="fa-solid fa-circle fa-xs tw-text-red-500 border-bold tw-border-red-500 tw-rounded-full"
-                  />
-                  <p>Exclude ({{ currentPageReviewData.exclude }})</p>
-                </div>
-                <div class="tw-flex tw-items-center tw-gap-2">
-                  <i
-                    class="fa-solid fa-circle fa-xs tw-text-white border-bold tw-border-gray-300 tw-rounded-full"
-                  />
-                  <p>
-                    Unjudge ({{
-                      currentPageReviewData.total_number_to_review -
-                      currentPageReviewData.reviewed
-                    }})
-                  </p>
-                </div>
+                <p>Include ({{ currentPageReviewData.include }})</p>
+              </div>
+              <div class="tw-flex tw-items-center tw-gap-2">
+                <i
+                  class="fa-solid fa-circle fa-xs tw-text-gray-500 border-bold tw-border-gray-500 tw-rounded-full"
+                />
+                <p>Maybe ({{ currentPageReviewData.maybe }})</p>
+              </div>
+              <div class="tw-flex tw-items-center tw-gap-2">
+                <i
+                  class="fa-solid fa-circle fa-xs tw-text-red-500 border-bold tw-border-red-500 tw-rounded-full"
+                />
+                <p>Exclude ({{ currentPageReviewData.exclude }})</p>
+              </div>
+              <div class="tw-flex tw-items-center tw-gap-2">
+                <i
+                  class="fa-solid fa-circle fa-xs tw-text-white border-bold tw-border-gray-300 tw-rounded-full"
+                />
+                <p>
+                  Unjudge ({{
+                    currentPageReviewData.total_number_to_review -
+                    currentPageReviewData.reviewed
+                  }})
+                </p>
               </div>
             </div>
           </div>
         </div>
 
         <!-- abstract section -->
-        <div class="tw-w-[50%] tw-relative tw-pl-6 tw-pr-4 tw-my-6">
-          <ScrollPanel
-            ref="autoScrollTarget"
-            class="tw-w-full tw-h-full"
-            :pt="{
-              wrapper: 'scrollpanel-border',
-              bary: 'tw-absolute tw-right-0 tw-translate-y-[0.55rem] tw-mx-4 tw-opacity-100 tw-bg-primary-500',
-            }"
+        <ScrollPanel
+          ref="autoScrollTarget"
+          :pt="{
+            root: 'tw-w-[48vw] tw-py-4 tw-relative tw-h-full',
+            wrapper: 'tw-pr-4',
+            bary: 'tw-opacity-100 tw-bg-primary-500',
+          }"
+        >
+          <div
+            v-if="extractSections(localDocs[currentIndex].corpus.abstract)"
+            class="tw-flex tw-flex-col tw-gap-y-3"
           >
-            <div
-              v-if="extractSections(localDocs[currentIndex].corpus.abstract)"
-              class="tw-flex tw-flex-col tw-gap-y-3"
+            <p
+              v-for="section in extractSections(
+                localDocs[currentIndex].corpus.abstract,
+              )"
             >
-              <p
-                v-for="section in extractSections(
-                  localDocs[currentIndex].corpus.abstract,
-                )"
-              >
-                <span class="tw-font-medium">{{ section.header }}:</span>
-                {{ section.content }}
-              </p>
-            </div>
-            <p v-else>{{ localDocs[currentIndex].corpus.abstract }}</p>
-          </ScrollPanel>
-        </div>
+              <span class="tw-font-medium">{{ section.header }}:</span>
+              {{ section.content }}
+            </p>
+          </div>
+          <p v-else>{{ localDocs[currentIndex].corpus.abstract }}</p>
+        </ScrollPanel>
 
         <!-- keyboard guide panel section -->
-        <div class="tw-relative">
+        <div class="tw-w-[26vw] tw-py-2">
+          <div class="tw-flex tw-justify-end">
+            <i
+              @click="visible = false"
+              class="pi pi-window-minimize tw-mb-1 tw-text-sm tw-text-slate-500 active:tw-scale-[0.8] tw-transition tw-duration-150 hover:tw-text-primary-500 tw-cursor-pointer"
+            />
+          </div>
           <KeyBoardGuidePanel />
         </div>
       </div>
@@ -145,6 +157,52 @@
       ></div>
 
       <!-- footer section -->
+
+      <div
+        class="tw-p-2 tw-absolute tw-bottom-[3.8rem] tw-z-10 tw-left-1/2 tw-translate-x-[-50%]"
+      >
+        <Message
+          v-for="msg of messages"
+          :key="msg.id"
+          :severity="msg.severity"
+          :pt="{
+            root: 'tw-bg-[#FEFCE9] tw-min-w-[60.5vw]',
+          }"
+          @click.stop
+          @close="messages = []"
+        >
+          <div class="tw-flex tw-flex-col tw-gap-2 tw-px-2">
+            <p>
+              The following studies still require assessment. Please review them
+              before continuing to the next page.
+            </p>
+            <p>You can navigate to each study by clicking its number.</p>
+            <div class="tw-flex tw-justify-center tw-gap-4">
+              <div v-for="item in unjudgeIndices">
+                <Badge
+                  :severity="
+                    localDocs[item.index].feedback === 'unjudge'
+                      ? 'warning'
+                      : ''
+                  "
+                  :value="
+                    currentPageReviewData.total_number_to_review *
+                      currentPageIndex +
+                    item.index +
+                    1
+                  "
+                  class="tw-cursor-pointer tw-w-[1.6rem] tw-h-[1.6rem] tw-flex tw-text-center tw-justify-center tw-items-center tw-rounded-full"
+                  :class="{
+                    'tw-animate-bounce': currentIndex === item.index,
+                  }"
+                  @click="selectCard(item.index)"
+                />
+              </div>
+            </div>
+          </div>
+        </Message>
+      </div>
+
       <div
         class="tw-bg-white tw-flex tw-justify-between tw-px-6 tw-py-3 tw-rounded-b-lg"
       >
@@ -166,7 +224,7 @@
               icon="fa-solid fa-xmark"
               label="Exclude"
               severity="danger"
-              @click="review('exclude')"
+              @click="review('exclude', 'click')"
               :style="getActiveStyle('exclude')"
             />
             <CustomButton
@@ -174,7 +232,7 @@
               icon="fa-solid fa-question"
               label="Maybe"
               severity="secondary"
-              @click="review('maybe')"
+              @click="review('maybe', 'click')"
               :style="getActiveStyle('maybe')"
             />
             <CustomButton
@@ -182,7 +240,7 @@
               icon="fa-solid fa-check"
               label="Include"
               severity="success"
-              @click="review('include')"
+              @click="review('include', 'click')"
               :style="getActiveStyle('include')"
             />
           </div>
@@ -194,61 +252,96 @@
     </template>
   </Dialog>
 
-  <div
-    v-if="unjudgeIndices.length > 0"
-    class="tw-w-full tw-flex tw-justify-center tw-pointer-events-none tw-flex tw-items-end tw-fixed tw-h-[100vh] tw-z-[1200] tw-py-28 tw-top-0 tw-left-1/2 tw-translate-x-[-50%]"
-  >
-    <div
-      class="tw-bg-white tw-rounded-md tw-pointer-events-auto tw-shadow tw-min-w-[50%]"
-    >
-      <Message severity="warn">
-        Studies
-        <span v-for="(item, index) in unjudgeIndices"
-          >{{ item.index + 1
-          }}<span v-if="index !== unjudgeIndices.length - 1">, </span></span
-        >
-        still need your assessment
-      </Message>
-    </div>
-  </div>
-
   <!-- Current Page Complete -->
   <Modal
     id="CurrentPageComplete"
     v-model:is-active="currentPageComplete"
-    leftBtn="Continue Review"
-    rightBtn="Exit Focus Mode"
     :close-on-escape="false"
-    @confirm="existFocuseMode()"
   >
     <template #header>
-      <h3>Current Page Complete</h3>
+      <h3>Current Page Completed</h3>
     </template>
     <template #body>
       <div class="tw-flex tw-flex-col tw-gap-3">
-        <p>To move to the next page:</p>
+        <p>To continue:</p>
         <div class="tw-flex tw-gap-4 tw-items-center">
           <p
             class="tw-text-primary-500 tw-bg-primary-50 tw-rounded tw-px-2 tw-py-1 tw-font-medium tw-w-fit border"
           >
             Esc
           </p>
-          <p>Exist focus mode</p>
+          <p>Exit focus mode</p>
         </div>
-        <div class="tw-flex tw-gap-4 tw-items-center">
+        <div
+          v-if="currentPageIndex != totalPageIndex - 1"
+          class="tw-flex tw-gap-4 tw-items-center"
+        >
           <p
             class="tw-text-primary-500 tw-bg-primary-50 tw-rounded tw-px-2 tw-py-1 tw-font-medium tw-w-fit border"
           >
-            >
+            P
           </p>
-          <p>Continue to next page in ranking view</p>
+          <p>Pause screening and check summary of current assessment</p>
         </div>
-        <p
-          class="tw-text-primary-500 tw-bg-primary-50 tw-rounded tw-px-2 tw-py-1 tw-font-medium border"
+        <div
+          v-else
+          class="tw-flex tw-gap-4 tw-items-center"
         >
-          Note: System will rerank remaining studies based on your feedback.
-          This may take a moment.
-        </p>
+          <p
+            class="tw-text-primary-500 tw-bg-primary-50 tw-rounded tw-px-2 tw-py-1 tw-font-medium tw-w-fit border"
+          >
+            F
+          </p>
+          <p>Finish your screening</p>
+        </div>
+        <div
+          v-if="currentPageIndex != totalPageIndex - 1"
+          class="tw-flex tw-gap-4 tw-items-center"
+        >
+          <p
+            class="tw-text-primary-500 tw-bg-primary-50 tw-rounded tw-px-2 tw-py-1 tw-font-medium tw-w-fit border"
+          >
+            N
+          </p>
+          <p>Continue screening on the next page</p>
+        </div>
+        <div
+          v-if="currentPageIndex != totalPageIndex - 1"
+        >
+          <p
+            class="tw-text-primary-500 tw-bg-primary-50 tw-rounded tw-px-2 tw-py-1 tw-font-medium border"
+          >
+            Note: System will rerank remaining studies based on your feedback.
+            This may take a few moments.
+          </p>
+        </div>
+      </div>
+    </template>
+    <template #footer>
+      <div class="tw-w-full tw-flex tw-justify-end">
+        <CustomButton
+          label="Exit Focus Mode"
+          @click="exitFocusMode()"
+          severity="secondary"
+        />
+        <CustomButton
+          v-if="currentPageIndex != totalPageIndex - 1"
+          label="Pause Screening"
+          severity="warning"
+          @click="emit('pause')"
+        />
+        <CustomButton
+          v-else
+          label="Finish Screening"
+          severity="danger"
+          @click="emit('stop')"
+        />
+        <CustomButton
+          v-if="currentPageIndex != totalPageIndex - 1"
+          label="Continue to Next Page"
+          class="tw-flex-1"
+          @click="emitUpdatePage()"
+        />
       </div>
     </template>
   </Modal>
@@ -264,6 +357,7 @@ import ScrollPanel from 'primevue/scrollpanel'
 import ProgressBar from 'primevue/progressbar'
 import Modal from '@/components/Modal.vue'
 import Message from 'primevue/message'
+import Badge from 'primevue/badge'
 
 import { IDoc } from '@/types/corpus'
 
@@ -281,6 +375,8 @@ const emit = defineEmits([
   'update:selected-card',
   'update:feedback',
   'update:page',
+  'pause',
+  'stop',
   'scroll-to-bottom',
 ])
 
@@ -307,9 +403,21 @@ const feedback = ref<'unjudge' | 'include' | 'exclude' | 'maybe'>(
   localDocs.value[currentIndex.value].feedback,
 )
 
-function review(value: 'unjudge' | 'include' | 'exclude' | 'maybe') {
+// warning unjudge =========================================================
+const messages = ref<
+  { severity: string; content: { index: number }[]; id: number }[]
+>([])
+let count = ref(0)
+
+function review(
+  value: 'unjudge' | 'include' | 'exclude' | 'maybe',
+  event: 'click' | 'keyup',
+) {
   if (!props.fullView) return
-  if (isCompleteReview.value && feedback.value == value) {
+  if (
+    (isCompleteReview.value && feedback.value == value && event === 'click') ||
+    value === 'unjudge'
+  ) {
     feedback.value = 'unjudge'
     isCompleteReview.value = false
   } else {
@@ -317,12 +425,16 @@ function review(value: 'unjudge' | 'include' | 'exclude' | 'maybe') {
     isCompleteReview.value = true
   }
 
-  emit('update:feedback', { index: props.index, feedback: feedback.value })
+  if (localDocs.value[currentIndex.value].feedback != feedback.value) {
+    emit('update:feedback', {
+      index: currentIndex.value,
+      feedback: feedback.value,
+    })
+  }
 
   if (getAreAllFeedbacksJudged()) {
     currentPageComplete.value = true
   } else if (
-    isCompleteReview.value &&
     currentIndex.value ===
       props.currentPageReviewData.total_number_to_review - 1 &&
     !getAreAllFeedbacksJudged()
@@ -330,6 +442,10 @@ function review(value: 'unjudge' | 'include' | 'exclude' | 'maybe') {
     unjudgeIndices.value = localDocs.value
       .map((item, index) => (item.feedback === 'unjudge' ? { index } : null))
       .filter((entry) => entry !== null) as { index: number }[]
+
+    messages.value = [
+      { severity: 'warn', content: unjudgeIndices.value, id: count.value++ },
+    ]
   }
 }
 
@@ -350,7 +466,7 @@ function getActiveStyle(value: 'unjudge' | 'include' | 'exclude' | 'maybe') {
   }
 
   if (isCompleteReview.value) {
-    if (localDocs.value[props.index].feedback === value) {
+    if (localDocs.value[currentIndex.value].feedback === value) {
       return styleMap[value]
     }
     return 'opacity: 40%'
@@ -359,40 +475,50 @@ function getActiveStyle(value: 'unjudge' | 'include' | 'exclude' | 'maybe') {
 
 // keys event
 const judge = ref<string>('')
+let isKeyPressed = false
 
 type KeyCombo =
+  | 'Backspace'
   | 'ArrowUp'
   | 'ArrowDown'
   | 'ArrowLeft'
-  | 'm'
+  | 'KeyM'
   | 'ArrowRight'
   | 'Alt+ArrowLeft'
-  | 'Alt+m'
+  | 'Alt+KeyM'
   | 'Alt+ArrowRight'
   | 'Alt+ArrowDown'
   | 'Alt+ArrowUp'
+  | 'Alt+Backspace'
 
 const keyMappings: Record<KeyCombo, () => void> = {
   ArrowUp: () => prevDoc(),
   ArrowDown: () => nextDoc(),
-  ArrowLeft: () => review('exclude'),
-  m: () => review('maybe'),
-  ArrowRight: () => review('include'),
+  Backspace: () => review('unjudge', 'keyup'),
+  ArrowLeft: () => review('exclude', 'keyup'),
+  KeyM: () => review('maybe', 'keyup'),
+  ArrowRight: () => review('include', 'keyup'),
   // composite keys
-  'Alt+ArrowLeft': () => {
-    review('exclude')
+  'Alt+Backspace': () => {
+    review('unjudge', 'keyup')
     setTimeout(() => {
       nextDoc()
     }, 500)
   },
-  'Alt+m': () => {
-    review('maybe')
+  'Alt+ArrowLeft': () => {
+    review('exclude', 'keyup')
+    setTimeout(() => {
+      nextDoc()
+    }, 500)
+  },
+  'Alt+KeyM': () => {
+    review('maybe', 'keyup')
     setTimeout(() => {
       nextDoc()
     }, 500)
   },
   'Alt+ArrowRight': () => {
-    review('include')
+    review('include', 'keyup')
     setTimeout(() => {
       nextDoc()
     }, 500)
@@ -405,39 +531,106 @@ const keyMappings: Record<KeyCombo, () => void> = {
   },
 }
 
+const emitUpdatePage = () => {
+  if (props.currentPageIndex + 1 <= props.totalPageIndex - 1) {
+    emit('update:page', props.currentPageIndex + 1)
+  }
+  // if (reopenFocusMode) {
+  //   enterFocusMode(true)
+  // }
+}
+
+const selectCard = (index: number) => {
+  currentIndex.value = index
+  initDoc()
+}
+
 window.addEventListener('keydown', (e) => {
+  if (
+    e.altKey &&
+    [
+      'KeyM',
+      'ArrowLeft',
+      'ArrowRight',
+      'ArrowDown',
+      'ArrowUp',
+      'Backspace',
+    ].includes(e.code)
+  ) {
+    e.preventDefault()
+  } else if (
+    [
+      'KeyM',
+      'ArrowLeft',
+      'ArrowRight',
+      'ArrowDown',
+      'ArrowUp',
+      'Backspace',
+    ].includes(e.code)
+  ) {
+    e.preventDefault()
+  }
+})
+
+window.addEventListener('keyup', (e) => {
+  if (isKeyPressed) return
+  isKeyPressed = true
+
+  setTimeout(() => {
+    isKeyPressed = false
+  }, 500) // ป้องกันการกดซ้ำภายใน 500ms
+
   let combo: KeyCombo | null = null
 
   if (e.key === 'Escape') {
     if (currentPageComplete.value) {
-      existFocuseMode()
-    }
-    else {
+      exitFocusMode()
+    } else {
       emit('update:selected-card', currentIndex.value)
     }
-  } else if (e.key === '>' && currentPageComplete.value) {
-    existFocuseMode()
-    if (props.currentPageIndex + 1 <= props.totalPageIndex - 1) {
-      emit('update:page', {
-        type: '>',
-        index: props.currentPageIndex + 1,
-      })
-    }
+  } else if (
+    e.code === 'KeyN' &&
+    currentPageComplete.value &&
+    props.currentPageIndex !== props.totalPageIndex - 1
+  ) {
+    // exitFocusMode()
+    emitUpdatePage()
+  } else if (
+    e.code === 'KeyP' &&
+    currentPageComplete.value &&
+    props.currentPageIndex !== props.totalPageIndex - 1
+  ) {
+    emit('pause')
+  } else if (
+    e.code === 'KeyF' &&
+    currentPageComplete.value &&
+    props.currentPageIndex === props.totalPageIndex - 1
+  ) {
+    emit('stop')
   }
   // Detect Alt + specific key combinations
   else if (
     e.altKey &&
-    ['m', 'ArrowLeft', 'ArrowRight', 'ArrowDown', 'ArrowUp'].includes(e.key)
+    ['KeyM', 'ArrowLeft', 'ArrowRight', 'ArrowDown', 'ArrowUp'].includes(e.code)
   ) {
-    e.preventDefault()
-    combo = `Alt+${e.key}` as KeyCombo
+    if (!currentPageComplete.value) combo = `Alt+${e.code}` as KeyCombo
   }
   // Detect single key presses
   else if (
-    ['ArrowUp', 'ArrowDown', 'm', 'ArrowLeft', 'ArrowRight'].includes(e.key)
+    ['KeyM', 'ArrowLeft', 'ArrowRight', 'ArrowDown', 'ArrowUp'].includes(
+      e.code,
+    ) &&
+    !currentPageComplete.value
   ) {
-    e.preventDefault()
-    combo = e.key as KeyCombo
+    if (!currentPageComplete.value) combo = e.code as KeyCombo
+  }
+  // Detect Alt + backspace key combinations
+  else if (e.altKey && 'Backspace' === e.code) {
+    combo = `Alt+${e.code}` as KeyCombo
+  }
+  // Detect backspace key presses
+  else if ('Backspace' === e.code) {
+    combo = e.code as KeyCombo
   }
 
   if (combo && combo in keyMappings) {
@@ -577,6 +770,8 @@ function prevDoc() {
 }
 
 function nextDoc() {
+  // unjudgeIndices.value = []
+
   if (
     isCompleteReview.value &&
     currentIndex.value ===
@@ -633,20 +828,13 @@ function getAreAllFeedbacksJudged() {
   return localDocs.value.every((doc) => doc.feedback !== 'unjudge')
 }
 
-function existFocuseMode() {
+function exitFocusMode() {
   currentPageComplete.value = false
   visible.value = false
   setTimeout(() => {
     emit('scroll-to-bottom')
   }, 100)
 }
-
-// Handle Escape key press
-// function handleKeydown(event: KeyboardEvent) {
-//   if (event.key === 'Escape' && currentPageComplete.value) {
-//     existFocuseMode()
-//   }
-// }
 
 watch(
   () => props.docs,
@@ -656,12 +844,4 @@ watch(
   },
   { deep: true },
 )
-
-// onMounted(() => {
-//   window.addEventListener('keydown', handleKeydown)
-// })
-
-// onUnmounted(() => {
-//   window.removeEventListener('keydown', handleKeydown)
-// })
 </script>

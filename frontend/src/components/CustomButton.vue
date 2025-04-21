@@ -3,6 +3,7 @@
     v-if="loading"
     :badge="badge"
     :severity="severity"
+    :outlined="outlined"
     class="tw-justify-center tw-flex tw-gap-4 tw-transform active:tw-scale-[0.9] tw-transition tw-duration-150"
     :class="{
       'tw-cursor-not-allowed': disabled,
@@ -17,6 +18,7 @@
     v-else
     :badge="badge"
     :severity="severity"
+    :outlined="outlined"
     class="tw-justify-center tw-flex tw-gap-4 tw-transform active:tw-scale-[0.9] tw-transition tw-duration-150"
     :class="{
       'tw-cursor-not-allowed': disabled,
@@ -42,6 +44,7 @@ defineProps({
   size: { type: String as PropType<'default' | 'small'>, default: 'default' },
   severity: { type: String, default: 'primary' },
   disabled: { type: Boolean },
+  outlined: { type: Boolean },
   loading: { type: Boolean, default: false },
 })
 </script>

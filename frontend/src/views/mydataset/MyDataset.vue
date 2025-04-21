@@ -1,163 +1,305 @@
 <template>
   <LoadingScreen v-if="isLoading" />
-  <Container
-    v-else
-    icon="pi pi-inbox"
-    title="My Dataset / Review List"
-    class="tw-flex-col"
+
+  <BlockUI
+    :blocked="isLoading"
+    :pt="{ root: 'tw-z-0' }"
   >
-    <template #subtitle>
-      <p>
-        The estimated indexing time is approximately 30 seconds for the demo RIS
-        file. Please refresh the page to view the updated status and start
-        screening.
-      </p>
-      <p>
-        (Auto-refreshing in {{ countdown }} second<span v-if="countdown !== 1"
-          >s</span
-        >.)
-      </p>
-    </template>
-
-    <div class="tw-flex tw-justify-end tw-mb-8">
-      <CustomButton
-        class="tw-w-[13.5%]"
-        icon="pi pi-plus-circle"
-        label="New Dataset"
-        @click="router.push({ name: 'upload' })"
-      />
-    </div>
-
-    <DataTable
-      showGridlines
-      stripedRows
-      :value="datasets"
+    <Container
+      icon="pi pi-inbox"
+      title="My Dataset / Review List"
+      class="tw-flex-col"
     >
-      <Column
-        field="order"
-        class="tw-w-[5%]"
-        :pt="{ bodyCell: 'tw-text-center' }"
-      >
-        <template #header>
-          <p class="tw-m-auto tw-text-center">Order</p>
-        </template>
-        <template #body="slotProps">
-          {{ slotProps.index + 1 }}
-        </template>
-      </Column>
-      <Column
-        field="name"
-        class="tw-w-[27%]"
-        :pt="{ bodyCell: 'tw-text-center' }"
-      >
-        <template #header>
-          <p class="tw-m-auto tw-text-center">Name</p>
-        </template>
-        <template #body="slotProps">
-          {{ slotProps.data.name }}
-        </template>
-      </Column>
-      <Column
-        field="submission_timestamp"
-        class="tw-w-[10%]"
-        :pt="{ bodyCell: 'tw-text-center' }"
-      >
-        <template #header>
-          <p class="tw-m-auto tw-text-center">Submission<br />Timestamp</p>
-        </template>
-        <template #body="slotProps">
-          {{ formatDateTime(slotProps.data.submission_timestamp) }}
-        </template>
-      </Column>
-      <Column
-        field="start_indexing_timestamp"
-        class="tw-w-[10%]"
-        :pt="{ bodyCell: 'tw-text-center' }"
-      >
-        <template #header>
-          <p class="tw-m-auto tw-text-center">Start Indexing<br />Timestamp</p>
-        </template>
-        <template #body="slotProps">
-          {{ formatDateTime(slotProps.data.start_indexing_timestamp) }}
-        </template>
-      </Column>
-      <Column
-        field="indexing_time_spent"
-        class="tw-w-[10%]"
-        :pt="{ bodyCell: 'tw-text-center' }"
-      >
-        <template #header>
-          <p class="tw-m-auto tw-text-center">Indexing<br />Time Spent</p>
-        </template>
-        <template #body="slotProps">
-          <p v-if="slotProps.data.indexing_time_spent">
-            {{ slotProps.data.indexing_time_spent }}
-          </p>
-          <p v-else>—</p>
-        </template>
-      </Column>
-      <Column
-        field="indexing_status"
-        class="tw-w-[13%]"
-        :pt="{ bodyCell: 'tw-text-center' }"
-      >
-        <template #header>
-          <p class="tw-m-auto tw-text-center">Indexing<br />Status</p>
-        </template>
-        <template #body="slotProps">
-          <p
-            class="tw-rounded"
-            :class="getIndexingStatusClass(slotProps.data.indexing_status)"
-          >
-            {{ toTitleCase(slotProps.data.indexing_status.replace('_', ' ')) }}
-          </p>
-        </template>
-      </Column>
-      <Column
-        field="screening_status"
-        class="tw-w-[10%]"
-        :pt="{ bodyCell: 'tw-text-center' }"
-      >
-        <template #header>
-          <p class="tw-m-auto tw-text-center">Screening<br />Status</p>
-        </template>
-        <template #body="slotProps">
-          <p
-            class="tw-rounded"
-            :class="getScreeningStatusClass(slotProps.data.screening_status)"
-          >
-            {{ toTitleCase(slotProps.data.screening_status.replace('_', ' ')) }}
-          </p>
-        </template>
-      </Column>
-      <Column
-        field="action"
-        class="tw-w-[13.5%]"
-      >
-        <template #header>
-          <p class="tw-m-auto tw-text-center">Action</p>
-        </template>
-        <template #body="slotProps">
+      <template #subtitle>
+        <p>
+          The estimated indexing time is approximately 15 seconds for the demo
+          RIS file. Please refresh the page to view the updated status and start
+          screening.
+        </p>
+        <p>
+          (Auto-refreshing in {{ countdown }} second<span v-if="countdown !== 1"
+            >s</span
+          >.)
+        </p>
+      </template>
+
+      <div class="tw-flex tw-flex-col tw-gap-6">
+        <div class="tw-flex tw-justify-end">
           <CustomButton
-            @click="
-              navigation(
-                slotProps.data.id,
-                slotProps.data.screening_status,
-                slotProps.data.current_page_index,
-              )
-            "
-            class="tw-w-full"
-            size="small"
-            :label="getActionButtonLabel(slotProps.data.screening_status)"
-            :disabled="
-              slotProps.data.indexing_status !== 'index_ready' &&
-              slotProps.data.indexing_status !== 're-rank_ready'
-            "
+            class="tw-w-[13.5%]"
+            icon="pi pi-plus-circle"
+            label="New Dataset"
+            @click="router.push({ name: 'upload' })"
           />
-        </template>
-      </Column>
-    </DataTable>
-  </Container>
+        </div>
+
+        <div class="tw-flex tw-gap-4 tw-items-center">
+          <i class="pi pi-search" />
+          <InputText
+            fluid
+            class="tw-w-full"
+            placeholder="Search by Name"
+            v-model="searchQuery"
+          />
+          <Button
+            v-model="filterVisible"
+            icon="pi pi-filter"
+            label="Filters"
+            @click="toggle"
+            outlined
+          />
+
+          <OverlayPanel ref="op">
+            <div class="tw-flex tw-flex-col tw-gap-4 tw-w-[18vw]">
+              <div class="tw-flex tw-flex-col tw-gap-1">
+                <small class="tw-font-medium tw-text-primary-500">
+                  Screening Status
+                </small>
+                <Dropdown
+                  v-model="selectedScreeningStatus"
+                  :options="screeningStatusArray"
+                  optionLabel="name"
+                  placeholder="Select Screening Status"
+                >
+                  <template #value="slotProps">
+                    <small
+                      v-if="slotProps.value"
+                      class="tw-rounded tw-w-fit tw-px-2"
+                      :class="getScreeningStatusClass(slotProps.value.value)"
+                    >
+                      {{ toTitleCase(slotProps.value.value.replace('_', ' ')) }}
+                    </small>
+                    <span v-else>
+                      <small>{{ slotProps.placeholder }}</small>
+                    </span>
+                  </template>
+                  <template #option="slotProps">
+                    <small
+                      class="tw-rounded tw-w-fit tw-px-2"
+                      :class="getScreeningStatusClass(slotProps.option.value)"
+                    >
+                      {{
+                        toTitleCase(slotProps.option.value.replace('_', ' '))
+                      }}
+                    </small>
+                  </template>
+                </Dropdown>
+              </div>
+              <div class="tw-flex tw-justify-between">
+                <Button
+                  label="Clear"
+                  outlined
+                  size="small"
+                  :pt="{ root: 'tw-py-2', label: 'tw-text-xs' }"
+                  @click="clearScreeningStatusFilter"
+                />
+                <Button
+                  label="Apply"
+                  size="small"
+                  :pt="{ root: 'tw-py-2', label: 'tw-text-xs' }"
+                  @click="applyScreeningStatusFilter"
+                />
+              </div>
+            </div>
+          </OverlayPanel>
+        </div>
+
+        <DataTable
+          showGridlines
+          stripedRows
+          :value="filteredDatasets"
+          paginator
+          :rows="10"
+          :rowsPerPageOptions="[10, 20, 50]"
+        >
+          <Column
+            field="order"
+            class=""
+            :pt="{ bodyCell: 'tw-text-center' }"
+          >
+            <template #header>
+              <p class="tw-m-auto tw-text-center">Order</p>
+            </template>
+            <template #body="slotProps">
+              {{ slotProps.index + 1 }}
+            </template>
+          </Column>
+          <Column
+            field="name"
+            class="tw-w-[24%]"
+            :pt="{ bodyCell: 'tw-text-center' }"
+          >
+            <template #header>
+              <p class="tw-m-auto tw-text-center">Name</p>
+            </template>
+            <template #body="slotProps">
+              {{ slotProps.data.name }}
+            </template>
+          </Column>
+          <Column
+            field="submission_timestamp"
+            sortable
+            class=""
+            :pt="{ bodyCell: 'tw-text-center' }"
+          >
+            <template #header>
+              <p class="tw-m-auto tw-text-center">Submission<br />Timestamp</p>
+            </template>
+            <template #body="slotProps">
+              <p>
+                {{
+                  formatDateTime(slotProps.data.submission_timestamp).split(
+                    ', ',
+                  )[0]
+                }}
+              </p>
+              <p>
+                {{
+                  formatDateTime(slotProps.data.submission_timestamp).split(
+                    ', ',
+                  )[1]
+                }}
+              </p>
+            </template>
+          </Column>
+          <Column
+            field="start_indexing_timestamp"
+            sortable
+            class=""
+            :pt="{ bodyCell: 'tw-text-center' }"
+          >
+            <template #header>
+              <p class="tw-m-auto tw-text-center">
+                Start Indexing<br />Timestamp
+              </p>
+            </template>
+            <template #body="slotProps">
+              <p>
+                {{
+                  formatDateTime(slotProps.data.start_indexing_timestamp).split(
+                    ', ',
+                  )[0]
+                }}
+              </p>
+              <p>
+                {{
+                  formatDateTime(slotProps.data.start_indexing_timestamp).split(
+                    ', ',
+                  )[1]
+                }}
+              </p>
+            </template>
+          </Column>
+          <Column
+            field="indexing_time_spent"
+            sortable
+            class=""
+            :pt="{ bodyCell: 'tw-text-center' }"
+          >
+            <template #header>
+              <p class="tw-m-auto tw-text-center">Indexing<br />Time Spent</p>
+            </template>
+            <template #body="slotProps">
+              <p v-if="slotProps.data.indexing_time_spent">
+                {{ slotProps.data.indexing_time_spent }}
+              </p>
+              <p v-else>—</p>
+            </template>
+          </Column>
+          <Column
+            field="indexing_status"
+            class="tw-w-[11%]"
+            :pt="{ bodyCell: 'tw-text-center' }"
+          >
+            <template #header>
+              <p class="tw-m-auto tw-text-center">Indexing<br />Status</p>
+            </template>
+            <template #body="slotProps">
+              <p
+                class="tw-rounded"
+                :class="getIndexingStatusClass(slotProps.data.indexing_status)"
+              >
+                {{
+                  toTitleCase(slotProps.data.indexing_status.replace('_', ' '))
+                }}
+              </p>
+            </template>
+          </Column>
+          <Column
+            field="screening_status"
+            class="tw-w-[11%]"
+            :pt="{ bodyCell: 'tw-text-center' }"
+          >
+            <template #header>
+              <p class="tw-m-auto tw-text-center">Screening<br />Status</p>
+            </template>
+            <template #body="slotProps">
+              <p
+                class="tw-rounded"
+                :class="
+                  getScreeningStatusClass(slotProps.data.screening_status)
+                "
+              >
+                {{
+                  toTitleCase(slotProps.data.screening_status.replace('_', ' '))
+                }}
+              </p>
+              <small
+                v-if="
+                  slotProps.data.screening_status === 'screening' &&
+                  slotProps.data.current_page_index + 1 <=
+                    slotProps.data.total_number_of_pages
+                "
+              >
+                Page {{ slotProps.data.current_page_index + 1 }} /
+                {{ slotProps.data.total_number_of_pages }}
+              </small>
+            </template>
+          </Column>
+          <Column
+            field="action"
+            class=""
+          >
+            <template #header>
+              <p class="tw-m-auto tw-text-center">Action</p>
+            </template>
+            <template #body="slotProps">
+              <CustomButton
+                @click="
+                  navigation(
+                    slotProps.data.id,
+                    slotProps.data.screening_status,
+                    slotProps.data.current_page_index,
+                  )
+                "
+                class="tw-w-full"
+                size="small"
+                :label="getActionButtonLabel(slotProps.data.screening_status)"
+                :disabled="
+                  slotProps.data.indexing_status !== 'index_ready' &&
+                  slotProps.data.indexing_status !== 're-rank_ready'
+                "
+                :outlined="
+                  getActionButtonLabel(slotProps.data.screening_status) ===
+                  'Resume SR'
+                "
+                :severity="
+                  getActionButtonLabel(slotProps.data.screening_status) ===
+                  'Start Review'
+                    ? 'secondary'
+                    : ''
+                "
+              />
+            </template>
+          </Column>
+
+          <template #empty>
+            <p class="tw-text-center">No dataset / review list found.</p>
+          </template>
+        </DataTable>
+      </div>
+    </Container>
+  </BlockUI>
 </template>
 
 <script lang="ts" setup>
@@ -166,16 +308,22 @@ import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
 import CustomButton from '@/components/CustomButton.vue'
 import LoadingScreen from '@/components/LoadingScreen.vue'
+import BlockUI from 'primevue/blockui'
+import InputText from 'primevue/inputtext'
+import Dropdown from 'primevue/dropdown'
+import OverlayPanel from 'primevue/overlaypanel'
+import Button from 'primevue/button'
 
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { formatDateTime } from '@/utils/datetime'
 import { toTitleCase } from '@/utils/string'
 
 import axios, { AxiosError } from 'axios'
 import { getTokenHeader } from '@/utils/auth'
 
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 const route = useRoute()
+const router = useRouter()
 
 import { useError } from '@/composables/error'
 const { getResponseErrorMessage } = useError()
@@ -184,17 +332,66 @@ import { useToast } from '@/composables/toast'
 const { showToast } = useToast()
 
 import { useLoading } from '@/composables/loading'
-import { IDataset, IIndexingStatus, IScreeningStatus } from '@/types/dataset'
-import router from '@/router'
 const { isLoading, setLoading } = useLoading(false)
 
-const datasets = ref<IDataset[]>()
+import { IDataset, IIndexingStatus, IScreeningStatus } from '@/types/dataset'
+import { DEFAULT_DATASET } from '@/defaults/dataset'
+
+const originalDatasets = ref<IDataset[]>([DEFAULT_DATASET])
+const datasets = ref<IDataset[]>([DEFAULT_DATASET])
+
+const searchQuery = ref('')
+const filterVisible = ref(false)
+const selectedScreeningStatus = ref()
+const screeningStatusArray = ref([
+  { name: 'Not Started', value: 'not_start' },
+  { name: 'Screening', value: 'screening' },
+  { name: 'Paused', value: 'paused' },
+  { name: 'Finished', value: 'finished' },
+])
+
+// overlay panel
+const op = ref()
+const toggle = (event: any) => {
+  op.value.toggle(event)
+}
+
+// Computed property for filtering datasets
+const filteredDatasets = computed(() => {
+  if (!searchQuery.value) return datasets.value
+  return datasets.value.filter((dataset) =>
+    dataset.name.toLowerCase().includes(searchQuery.value.toLowerCase()),
+  )
+})
+
+const clearScreeningStatusFilter = (event: any) => {
+  op.value.toggle(event)
+  selectedScreeningStatus.value = null
+  datasets.value = originalDatasets.value
+}
+
+const applyScreeningStatusFilter = (event: any) => {
+  op.value.toggle(event)
+
+  if (!selectedScreeningStatus.value) return
+
+  datasets.value = datasets.value.filter(
+    (dataset) =>
+      dataset.screening_status === selectedScreeningStatus.value.value,
+  )
+}
 
 const getDataset = async () => {
   try {
     setLoading(true)
     const result = await axios.get('encoder/get_review_list', getTokenHeader())
-    datasets.value = result.data.data
+    const sortedData = result.data.data.sort(
+      (a: IDataset, b: IDataset) =>
+        new Date(b.submission_timestamp).getTime() -
+        new Date(a.submission_timestamp).getTime(),
+    )
+    originalDatasets.value = sortedData
+    datasets.value = sortedData
   } catch (error) {
     console.error(error)
     if (error instanceof AxiosError) {
@@ -301,13 +498,13 @@ function checkStatusEvery30Seconds(datasetsRef: typeof datasets): void {
   }, 30000)
 }
 
-const countdown = ref(30)
+const countdown = ref(15)
 const startCountdown = () => {
   setInterval(() => {
     if (countdown.value > 0) {
       countdown.value -= 1 // Decrease by 1 every second
     } else {
-      countdown.value = 30 // Reset to 30 when it reaches 0
+      countdown.value = 15 // Reset to 15 when it reaches 0
     }
   }, 1000) // Update every 1 second
 }

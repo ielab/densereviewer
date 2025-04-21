@@ -9,10 +9,10 @@ from django.conf import settings
 from django.db.models import F, Case, When, Value
 from django.utils.timezone import now
 
-# Import Max's function
-from app_utils.max.tevatron_pipe    import dpr_pipeline
-from app_utils.max.api_routing      import get_init_ranking
-from app_utils.max.pyserini_index   import index_corpus
+# Import DenseReviewer's Core functions
+from app_utils.core.tevatron_pipe    import dpr_pipeline
+from app_utils.core.api_routing      import get_init_ranking
+from app_utils.core.pyserini_index   import index_corpus
 
 # Import utilities function
 from encoder.models import Review

@@ -15,13 +15,16 @@ DenseReviewer is a screening prioritization tool for medical systematic reviews 
 
 #### Prerequisites:
  [Docker](https://docs.docker.com/get-started/get-docker/) and [Docker Compose](https://docs.docker.com/compose/) (+ NVIDIA GPU & CUDA optional)
+
+> **📢 RECOMMENDATION**: For optimal performance, we strongly recommend using the GPU version if you have a compatible NVIDIA GPU.
+
 #### Compatibility Checklist:
 
 - [x] **Linux (x86_64)** – Tested ✅
 
 - [x] **Windows (x86_64)** – Tested ✅
 
-- [ ] **macOS (Apple Silicon)** – Tested ✅
+- [x] **macOS (Apple Silicon)** – Tested ✅
 
 ### 1. Get the Code
 
@@ -34,17 +37,7 @@ cd densereviewer
 
 ### 2. Launch DenseReviewer
 
-****CPU Users****:
-
-```bash
-# build the backend service
-docker-compose build backend --no-cache --build-arg BUILD_OS=$(uname -s)
-
-# start the app
-docker compose up -d
-```
-
-****GPU Users****:
+****GPU Users**** ✅ (Recommended):
 
 ```bash
 # build the backend service with gpu support
@@ -52,6 +45,17 @@ docker compose -f docker-compose-gpu.yml build backend --no-cache
 
 # start the app with gpu support
 docker compose -f docker-compose-gpu.yml down && docker compose -f docker-compose-gpu.yml up -d
+```
+
+****CPU Users**** 🚧:
+
+```bash
+# Note: CPU version is currently being fixed
+# build the backend service
+docker-compose build backend --no-cache --build-arg BUILD_OS=$(uname -s)
+
+# start the app
+docker compose up -d
 ```
 
 ### 3. Access the User Interface

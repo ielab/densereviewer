@@ -8,14 +8,14 @@
 
 
 <p align="center">
-  <img src="assets/introduction.svg" style="width: 90%; height: auto;">
+  <img src="assets/introduction.svg" style="width: 100%; height: auto;">
 </p>
 
 DenseReviewer is a screening prioritization tool for medical systematic reviews based on dense retrieval and relevance feedback. It helps medical researchers and librarians efficiently screen titles and abstracts of studies by prioritizing relevant ones using state-of-the-art dense retrieval methods.
 
 ## Features
 <p align="center">
-  <img src="assets/workflow.svg" style="width: 70%; height: auto;">
+  <img src="assets/workflow.svg" style="width: 80%; height: auto;">
 </p>
 
 

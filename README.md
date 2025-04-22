@@ -1,9 +1,23 @@
-# DenseReviewer
+# DenseReviewer: A Screening Prioritisation Tool for Systematic Review based on Dense Retrieval
+
+<p align="center">
+| <a href="https://ielab.io/projects/systematic-reviews.html"><b>Project page</b></a> |
+<a href="https://arxiv.org/abs/2407.00635"><b>Research Paper</b></a> |
+ <a href="https://arxiv.org/abs/2502.03400"><b>Demo Paper</b></a>  | <a href="https://densereviewer.ielab.io/"><b>Website</b></a> |
+</p>
+
+
+<p align="center">
+  <img src="assets/introduction.pdf" style="width: 90%; height: auto;">
+</p>
 
 DenseReviewer is a screening prioritization tool for medical systematic reviews based on dense retrieval and relevance feedback. It helps medical researchers and librarians efficiently screen titles and abstracts of studies by prioritizing relevant ones using state-of-the-art dense retrieval methods.
 
-
 ## Features
+<p align="center">
+  <img src="assets/workflow.pdf" style="width: 70%; height: auto;">
+</p>
+
 
 - **Dense Retrieval & Relevance Feedback**: Uses PICO queries and iteratively updates rankings based on screener feedback
 - **Dual Screening Modes**: 
@@ -11,12 +25,17 @@ DenseReviewer is a screening prioritization tool for medical systematic reviews 
   - Focus mode: Review studies individually with keyboard controls
 - **Real-time Progress Tracking**: Visual analytics showing review progress and relevance discovery curves
 
+
+<p align="center">
+  <img src="assets/interface.pdf" style="width: 55%; height: auto;">
+</p>
+
 ## Installation
 
 #### Prerequisites:
  [Docker](https://docs.docker.com/get-started/get-docker/) and [Docker Compose](https://docs.docker.com/compose/) (+ NVIDIA GPU & CUDA optional)
 
-> **📢 RECOMMENDATION**: For optimal performance, we strongly recommend using the GPU version if you have a compatible NVIDIA GPU.
+> **📢 RECOMMENDATION**: For best performance, use the GPU version with a compatible NVIDIA GPU on a cloud server.
 
 #### Compatibility Checklist:
 
@@ -58,14 +77,6 @@ docker-compose build backend --no-cache --build-arg BUILD_OS=$(uname -s)
 docker compose up -d
 ```
 
-### 3. Access the User Interface
-
-Once the application is running, you can access the DenseReviewer web interface by opening your browser and navigating to:
-
-```
-http://localhost
-```
-
 
 ### Using the Python Library
 
@@ -88,6 +99,22 @@ This project is licensed under the GNU Affero General Public License v3.0 (AGPL-
 ## Acknowledgments
 
 We extend our gratitude to the engineering team of AI DETA Technologies Co. for their consultation and support in developing DenseReviewer.
+
+
+## Citation
+
+If you find this repo useful for your research, please kindly cite the following paper:
+```
+@inproceedings{2025maodensereviewer,
+author       = {Xinyu Mao and Teerapong Leelanupab and Harrisen Scells and Guido Zuccon},
+title        = {DenseReviewer: A Screening Prioritisation Tool for Systematic Review Based on Dense Retrieval},
+booktitle.   = {European Conference on Information Retreival},
+series       = {ECIR '25},
+publisher    = {Springer},
+year         = {2025},
+doi          = {10.1007/978-3-031-88720-8\_11}
+}
+```
 
 ## Contact
 

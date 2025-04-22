@@ -8,14 +8,14 @@
 
 
 <p align="center">
-  <img src="assets/introduction.pdf" style="width: 90%; height: auto;">
+  <img src="assets/introduction.svg" style="width: 90%; height: auto;">
 </p>
 
 DenseReviewer is a screening prioritization tool for medical systematic reviews based on dense retrieval and relevance feedback. It helps medical researchers and librarians efficiently screen titles and abstracts of studies by prioritizing relevant ones using state-of-the-art dense retrieval methods.
 
 ## Features
 <p align="center">
-  <img src="assets/workflow.pdf" style="width: 70%; height: auto;">
+  <img src="assets/workflow.svg" style="width: 70%; height: auto;">
 </p>
 
 
@@ -27,7 +27,7 @@ DenseReviewer is a screening prioritization tool for medical systematic reviews 
 
 
 <p align="center">
-  <img src="assets/interface.pdf" style="width: 55%; height: auto;">
+  <img src="assets/interface.svg" style="width: 55%; height: auto;">
 </p>
 
 ## Installation
@@ -104,7 +104,7 @@ We extend our gratitude to the engineering team of AI DETA Technologies Co. for 
 ## Citation
 
 If you find this repo useful for your research, please kindly cite the following paper:
-```
+```bibtex
 @inproceedings{2025maodensereviewer,
 author       = {Xinyu Mao and Teerapong Leelanupab and Harrisen Scells and Guido Zuccon},
 title        = {DenseReviewer: A Screening Prioritisation Tool for Systematic Review Based on Dense Retrieval},
